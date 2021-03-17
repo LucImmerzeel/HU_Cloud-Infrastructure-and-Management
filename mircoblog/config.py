@@ -12,5 +12,5 @@ class Config(object):
     MAIL_USE_TLS = os.environ.get('1') is not None
     MAIL_USERNAME = os.environ.get('spam@spam.lucimmerzeel.nl')
     MAIL_PASSWORD = os.environ.get('Wni75#4B0R8CyPkP')
-    ADMINS = ['spam@spam.lucimmerzeel.nl']
+    ADMINS = ['spam@spam.lucimmerzeel.nl', 'admin.flask@spam.lucimmerzeel.nl']
     POSTS_PER_PAGE = 25
