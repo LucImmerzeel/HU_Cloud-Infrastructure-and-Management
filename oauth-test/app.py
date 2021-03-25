@@ -1,17 +1,11 @@
-# Python standard libraries
 import json
+import subprocess
 import os
 import sqlite3
 
 # Third party libraries
 from flask import Flask, redirect, request, url_for
-from flask_login import (
-    LoginManager,
-    current_user,
-    login_required,
-    login_user,
-    logout_user,
-)
+from flask_login import  LoginManager, current_user, login_required, login_user, logout_user
 from oauthlib.oauth2 import WebApplicationClient
 import requests_oauthlib
 import requests
@@ -20,14 +14,20 @@ import requests
 from db import init_db_command
 from user import User
 
+import sys  # Use when calling other scripts
+sys.path.append(os.path.realpath('..oath-test'))
+sys.path.append(os.path.realpath('..dns-server'))
+
+
 # Configuration
 CLIENT_ID = os.environ.get("CLIENT_ID", None)
 CLIENT_SECRET = os.environ.get("CLIENT_SECRET", None)
 AUTHORIZATION_BASE_URL = "https://app.simplelogin.io/oauth2/authorize"
 TOKEN_URL = "https://app.simplelogin.io/oauth2/token"
 USERINFO_URL = "https://app.simplelogin.io/oauth2/userinfo"
+
 # This allows us to use a plain HTTP callback
-os.environ["OAUTHLIB_INSECURE_TRANSPORT"] = "1"
+#os.environ["OAUTHLIB_INSECURE_TRANSPORT"] = "1"
 
 GOOGLE_CLIENT_ID = os.environ.get("GOOGLE_CLIENT_ID", None)
 GOOGLE_CLIENT_SECRET = os.environ.get("GOOGLE_CLIENT_SECRET", None)
@@ -44,6 +44,23 @@ app.secret_key = os.environ.get("SECRET_KEY") or os.urandom(24)
 login_manager = LoginManager()
 login_manager.init_app(app)
 
+# Naive database setup
+try:
+    pass  # init_db_command()
+except sqlite3.OperationalError:
+    # Assume it's already been created
+    pass
+
+# OAuth2 client setup
+client = WebApplicationClient(GOOGLE_CLIENT_ID)
+
+# Start DNS
+subprocess.Popen(["powershell",
+                    "C:/Users/StudyUser/PycharmProjects/HU_Cloud-Infrastructure-and-Management/venv/Scripts/python.exe",
+                    "C:/Users/StudyUser/PycharmProjects/HU_Cloud-Infrastructure-and-Management/dns-server/dns-server.py"],
+                    stdout=subprocess.PIPE, shell=True)
+
+
 if __name__ == "__main__":
     app.run(ssl_context="adhoc", debug=True)
 
@@ -51,10 +68,6 @@ if __name__ == "__main__":
 @login_manager.unauthorized_handler
 def unauthorized():
     return "You must be logged in to access this content.", 403
-
-
-# OAuth2 client setup
-client = WebApplicationClient(GOOGLE_CLIENT_ID)
 
 
 # Flask-Login helper to retrieve a user from our db
@@ -65,18 +78,10 @@ def load_user(user_id):
 
 @app.route("/")
 def index():
-    if current_user.is_authenticated:
-        return (
-            "<p>Hello, {}! You're logged in! Email: {}</p>"
-            "<div><p>Google Profile Picture:</p>"
-            '<img src="{}" alt="Google profile pic"></img></div>'
-            '<a class="button" href="/logout">Logout</a>'.format(
-                current_user.name, current_user.email, current_user.profile_pic
-            )
-        )
-    else:
-        return """<a class="button" href="/google">Google Login</a><br>
-                  <a class="button" href="/sso">SSO</a>
+    return """<a class="button" href="/google">Google Login</a><br>
+                  <a class="button" href="/sso">SSO</a><br><br>
+                  <a class="button" href="/restart-dns">Restart DNS Server</a><br>
+                  <a class="button"    href="/stop-dns">Stop    DNS Server</a>
                """
 
 
@@ -121,6 +126,7 @@ def callback_sso():
     Avatar <img src="{user_info.get('avatar_url')}"> <br>
     <a href="/">Home</a>
     """
+
 
 
 @app.route("/google/callback")
@@ -182,7 +188,14 @@ def callback():
     login_user(user)
 
     # Send user back to homepage
-    return redirect(url_for("index"))
+    return (
+            "<p>Hello, {}! You're logged in! Email: {}</p>"
+            "<div><p>Google Profile Picture:</p>"
+            '<img src="{}" alt="Google profile pic"></img></div>'
+            '<a class="button" href="/logout">Logout</a>'.format(
+                current_user.name, current_user.email, current_user.profile_pic
+            )
+        )
 
 
 @app.route("/logout")
@@ -190,6 +203,18 @@ def callback():
 def logout():
     logout_user()
     return redirect(url_for("index"))
+
+
+@app.route("/restart-dns")
+def flask_restart_dns():
+    from web_scripts.restart_dns import restart_dns
+    return restart_dns()
+
+
+@app.route("/stop-dns")
+def flask_stop_dns():
+    from web_scripts.stop_dns import stop_dns
+    return stop_dns()
 
 
 def get_google_provider_cfg():
