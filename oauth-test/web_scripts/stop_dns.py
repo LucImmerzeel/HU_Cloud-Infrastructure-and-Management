@@ -1,8 +1,10 @@
 import psutil
+import os
 
+PIDFOLDER = os.environ.get("PIDFOLDER", None)
 
 def stop_dns():
-    with open("C:/Users/StudyUser/PycharmProjects/HU_Cloud-Infrastructure-and-Management/dns-server/pid.id", "r") as pid_file:
+    with open(PIDFOLDER, "r") as pid_file:
         pid = int(pid_file.read())
 
     try:
@@ -20,4 +22,4 @@ def stop_dns():
     except:
         pass
 
-    return """ <a>The DNS-server has been stopped with de PID of: {}</a>""".format(pid)
+    return """<a>The DNS-server has been stopped with de PID of: {}</a>""".format(pid)

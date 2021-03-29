@@ -1,25 +1,32 @@
+import os
+import sys  # Use when calling other scripts
+
+sys.path.append(os.path.realpath('.'))
+sys.path.append(os.path.realpath('../dns-server'))
+
 import json
 import subprocess
-import os
 import sqlite3
+import base64
 
 # Third party libraries
-from flask import Flask, redirect, request, url_for
-from flask_login import  LoginManager, current_user, login_required, login_user, logout_user
+from flask import Flask, redirect, request, url_for, Response
+# from flask_restful import Resource, Api
+from flask_login import LoginManager, current_user, login_required, login_user, logout_user
 from oauthlib.oauth2 import WebApplicationClient
 import requests_oauthlib
 import requests
+from web_scripts.mongodb import to_db, from_db, replace_db, remove_db, update_db
 
 # Internal imports
-from db import init_db_command
-from user import User
 
-import sys  # Use when calling other scripts
-sys.path.append(os.path.realpath('..oath-test'))
-sys.path.append(os.path.realpath('..dns-server'))
-
+from user import User, Token
 
 # Configuration
+INTERPRETER = os.environ.get("INTERPRETER", None)
+DNSSERVER = os.environ.get("DNSSERVER", None)
+CERTFOLDER = os.environ.get("CERTFOLDER", None)
+
 CLIENT_ID = os.environ.get("CLIENT_ID", None)
 CLIENT_SECRET = os.environ.get("CLIENT_SECRET", None)
 AUTHORIZATION_BASE_URL = "https://app.simplelogin.io/oauth2/authorize"
@@ -27,7 +34,7 @@ TOKEN_URL = "https://app.simplelogin.io/oauth2/token"
 USERINFO_URL = "https://app.simplelogin.io/oauth2/userinfo"
 
 # This allows us to use a plain HTTP callback
-#os.environ["OAUTHLIB_INSECURE_TRANSPORT"] = "1"
+# os.environ["OAUTHLIB_INSECURE_TRANSPORT"] = "1"
 
 GOOGLE_CLIENT_ID = os.environ.get("GOOGLE_CLIENT_ID", None)
 GOOGLE_CLIENT_SECRET = os.environ.get("GOOGLE_CLIENT_SECRET", None)
@@ -44,30 +51,44 @@ app.secret_key = os.environ.get("SECRET_KEY") or os.urandom(24)
 login_manager = LoginManager()
 login_manager.init_app(app)
 
-# Naive database setup
-try:
-    pass  # init_db_command()
-except sqlite3.OperationalError:
-    # Assume it's already been created
-    pass
-
 # OAuth2 client setup
 client = WebApplicationClient(GOOGLE_CLIENT_ID)
 
 # Start DNS
-subprocess.Popen(["powershell",
-                    "C:/Users/StudyUser/PycharmProjects/HU_Cloud-Infrastructure-and-Management/venv/Scripts/python.exe",
-                    "C:/Users/StudyUser/PycharmProjects/HU_Cloud-Infrastructure-and-Management/dns-server/dns-server.py"],
-                    stdout=subprocess.PIPE, shell=True)
+from web_scripts.restart_dns import restart_dns
 
+restart_dns()
 
 if __name__ == "__main__":
-    app.run(ssl_context="adhoc", debug=True)
+    app.run(ssl_context=(os.path.join(CERTFOLDER, "26417044_localhost.cert"),
+                         os.path.join(CERTFOLDER, "26417044_localhost.key")), debug=True)
 
 
-@login_manager.unauthorized_handler
-def unauthorized():
-    return "You must be logged in to access this content.", 403
+@login_manager.request_loader
+def load_user_from_request(request):
+    token = request.headers.get('Authorization')
+    key = request.args.get('key')
+    if token is None:
+        token = request.args.get('token')
+
+    if token is not None:
+        find = from_db("userdb", "users", {"token": token})
+
+        if find is None:
+            return None
+
+        id = find["_id"]
+        user_token = User(id_=id, name=token, email="", profile_pic="")
+        return user_token
+
+    # if token is not None:
+    #     username, password = token.split(":")  # naive token
+    #     user_entry = User.get(username)
+    #     if (user_entry is not None):
+    #         user = User()
+    #         if (user.password == password):
+    #             return user
+    return None
 
 
 # Flask-Login helper to retrieve a user from our db
@@ -76,13 +97,24 @@ def load_user(user_id):
     return User.get(user_id)
 
 
+@login_manager.unauthorized_handler
+def unauthorized():
+    return """  <p>You must be logged in to access this content.</p>
+                <a class="button" href="/">Back</a>""", 403
+
+
 @app.route("/")
 def index():
-    return """<a class="button" href="/google">Google Login</a><br>
-                  <a class="button" href="/sso">SSO</a><br><br>
-                  <a class="button" href="/restart-dns">Restart DNS Server</a><br>
-                  <a class="button"    href="/stop-dns">Stop    DNS Server</a>
-               """
+    if current_user.is_authenticated:
+        return redirect(url_for("flask_portal"))
+    else:
+        return f""" <h1>Home</h1>
+                    <h2>Welcome to the portal</h2>
+                    <h3>Sign in here:</h3><br>
+                    <a class="button" href="/google">Google Login</a><br>
+                    <a class="button" href="/sso"   >SSO</a><br>
+                    <a class="button" href="https://localhost:5000/api/v1.0/current?token=9f113e0fea66523a764ddeee"   >test token</a><br>
+                """
 
 
 @app.route("/google")
@@ -119,14 +151,28 @@ def callback_sso():
     )
 
     user_info = simplelogin.get(USERINFO_URL).json()
-    return f"""
-    User information: <br>
-    Name: {user_info["name"]} <br>
-    Email: {user_info["email"]} <br>
-    Avatar <img src="{user_info.get('avatar_url')}"> <br>
-    <a href="/">Home</a>
-    """
 
+    # Create a user in our db with the information provided by Google
+    user = User(
+        id_=user_info["id"], name=user_info["name"], email=user_info["email"],
+        profile_pic=str(user_info.get('avatar_url'))
+    )
+
+    # Doesn't exist? Add to database
+    if not User.get(user_info["id"]):
+        User.create(user_info["id"], user_info["name"], user_info["email"], str(user_info.get('avatar_url')))
+
+    # Begin user session by logging the user in
+    login_user(user)
+
+    # Adding to MongoDB
+    existingdata = from_db("userdb", "users", {"_id": str(user_info["id"])})
+    print(existingdata)
+    if existingdata is None:
+        to_db("userdb", "users", {"_id": str(user_info["id"]), 'name': user_info["name"],
+                                  'email': user_info["email"], 'picture_location': user_info.get('avatar_url')})
+
+    return redirect(url_for("flask_portal"))
 
 
 @app.route("/google/callback")
@@ -174,8 +220,7 @@ def callback():
     else:
         return "User email not available or not verified by Google.", 400
 
-    # Create a user in our db with the information provided
-    # by Google
+    # Create a user in our db with the information provided by Google
     user = User(
         id_=unique_id, name=users_name, email=users_email, profile_pic=picture
     )
@@ -185,17 +230,38 @@ def callback():
         User.create(unique_id, users_name, users_email, picture)
 
     # Begin user session by logging the user in
-    login_user(user)
+    login_user(user, remember=True)
 
-    # Send user back to homepage
-    return (
-            "<p>Hello, {}! You're logged in! Email: {}</p>"
-            "<div><p>Google Profile Picture:</p>"
-            '<img src="{}" alt="Google profile pic"></img></div>'
-            '<a class="button" href="/logout">Logout</a>'.format(
-                current_user.name, current_user.email, current_user.profile_pic
-            )
-        )
+    # Adding to MongoDB
+    existingdata = from_db("userdb", "users", {"_id": str(unique_id)})
+    print(existingdata)
+    if existingdata is None:
+        to_db("userdb", "users",
+              {"_id": str(unique_id), 'name': users_name, 'email': users_email, 'picture_location': picture})
+
+    # Send user to portal
+    return redirect(url_for("flask_portal"))
+
+
+@app.route("/portal", methods=['GET', 'POST'])
+@login_required
+def flask_portal():
+    from web_scripts.portal import portal
+    return portal()
+
+
+@app.route("/settings", methods=['GET', 'POST'])
+@login_required
+def flask_config_form():
+    from web_scripts.config_form import config_form
+    return config_form()
+
+
+@app.route("/ddns", methods=['GET', 'POST'])
+@login_required
+def flask_config_ddns():
+    from web_scripts.config_form import config_ddns
+    return config_ddns()
 
 
 @app.route("/logout")
@@ -206,16 +272,59 @@ def logout():
 
 
 @app.route("/restart-dns")
+@login_required
 def flask_restart_dns():
     from web_scripts.restart_dns import restart_dns
     return restart_dns()
 
 
 @app.route("/stop-dns")
+@login_required
 def flask_stop_dns():
     from web_scripts.stop_dns import stop_dns
     return stop_dns()
 
 
+@app.route("/generate_new_token")
+@login_required
+def generate_new_token():
+    import secrets
+    update_db("userdb", "users", {"_id": str(current_user.id)}, {"$set": {"token": secrets.token_hex(12)}})
+    return redirect(url_for("flask_config_form"))
+
+
+@app.route("/generate_new_key")
+@login_required
+def generate_new_key():
+    import secrets
+    update_db("userdb", "users", {"_id": str(current_user.id)}, {"$set": {"apikey": secrets.token_hex(12)}})
+    return redirect(url_for("flask_config_form"))
+
+
 def get_google_provider_cfg():
     return requests.get(GOOGLE_DISCOVERY_URL).json()
+
+
+# API ###########################################################
+@app.route("/api/v1.0/current", methods=['GET', 'POST'])
+@login_required
+def api_get():
+    from web_scripts.api_response import api_response
+    # from_db()
+    # user = User(
+    #     id_=user_info["id"], name=user_info["name"], email=user_info["email"],
+    #     profile_pic=str(user_info.get('avatar_url'))
+    # )
+    token = request.args.get('token')
+    find = from_db("userdb", "users", {"token": token})
+    print(current_user.id)
+    user_token = User(id_=find["_id"], name=token, email="", profile_pic="")
+    login_user(user_token)
+    return api_response()
+
+
+@app.route("/api/v1.0/delete", methods=['GET', 'POST'])
+def api_delete():
+    record_id = request.args.get('_id')
+    update_db("userdb", "users", {"_id": str(current_user.id)},  {"$pull": {"records": record_id}})
+    return redirect(url_for("flask_config_ddns"))

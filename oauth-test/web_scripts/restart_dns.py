@@ -1,22 +1,23 @@
 import psutil
 import subprocess
+from .stop_dns import stop_dns
+import os
+import time
+
+
+INTERPRETER = os.environ.get("INTERPRETER", None)
+DNSSERVER = os.environ.get("DNSSERVER", None)
+PIDFOLDER = os.environ.get("PIDFOLDER", None)
 
 
 def restart_dns():
-    returnString = ""
+    returnString = stop_dns()
 
-    with open("C:/Users/StudyUser/PycharmProjects/HU_Cloud-Infrastructure-and-Management/dns-server/pid.id", "r") as pid_file:
+    subprocess.Popen(["powershell", INTERPRETER, DNSSERVER], stdout=subprocess.PIPE, shell=True)
+    time.sleep(0.5)
+
+    with open(PIDFOLDER, "r") as pid_file:
         pid = int(pid_file.read())
 
-    try:
-        p = psutil.Process(pid)
-        p.terminate()
-    except psutil.NoSuchProcess:
-        returnString += """ <a>No process found with pid: {}</a><br>""".format(pid)
-
-    subprocess.Popen(["powershell",
-                      "C:/Users/StudyUser/PycharmProjects/HU_Cloud-Infrastructure-and-Management/venv/Scripts/python.exe",
-                      "C:/Users/StudyUser/PycharmProjects/HU_Cloud-Infrastructure-and-Management/dns-server/dns-server.py"],
-                     stdout=subprocess.PIPE, shell=True)
-
-    return returnString + """ <a>The DNS-server is restarting with de PID of: {}</a>""".format(pid)
+    return returnString + "<br>" + """<a>The DNS-server is restarting with de PID of: {}</a>
+                                      <br><a class="button" href="/portal">Back</a>""".format(pid)
