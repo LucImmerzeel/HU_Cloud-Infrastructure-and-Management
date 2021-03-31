@@ -42,6 +42,7 @@ GOOGLE_CLIENT_SECRET = os.environ.get("GOOGLE_CLIENT_SECRET", None)
 GOOGLE_DISCOVERY_URL = (
     "https://accounts.google.com/.well-known/openid-configuration"
 )
+GOOGLE_FLASK_URL = os.environ.get("GOOGLE_FLASK_URL", None)
 
 # Flask app setup
 app = Flask(__name__)
@@ -191,7 +192,7 @@ def callback():
     token_url, headers, body = client.prepare_token_request(
         token_endpoint,
         authorization_response=request.url,
-        redirect_url=request.base_url,
+        redirect_url=GOOGLE_FLASK_URL,
         code=code,
     )
     token_response = requests.post(
