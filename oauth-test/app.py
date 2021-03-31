@@ -16,7 +16,7 @@ from flask_login import LoginManager, current_user, login_required, login_user, 
 from oauthlib.oauth2 import WebApplicationClient
 import requests_oauthlib
 import requests
-from web_scripts.mongodb import to_db, from_db, replace_db, remove_db, update_db
+from web_scripts.mongodb import to_db, from_db, replace_db, remove_db, update_db, all_from_db
 
 # Internal imports
 
@@ -26,6 +26,7 @@ from user import User, Token
 INTERPRETER = os.environ.get("INTERPRETER", None)
 DNSSERVER = os.environ.get("DNSSERVER", None)
 CERTFOLDER = os.environ.get("CERTFOLDER", None)
+FLASK_URL = os.environ.get("FLASK_URL", None)
 
 CLIENT_ID = os.environ.get("CLIENT_ID", None)
 CLIENT_SECRET = os.environ.get("CLIENT_SECRET", None)
@@ -113,7 +114,8 @@ def index():
                     <h3>Sign in here:</h3><br>
                     <a class="button" href="/google">Google Login</a><br>
                     <a class="button" href="/sso"   >SSO</a><br>
-                    <a class="button" href="https://localhost:5000/api/v1.0/current?token=9f113e0fea66523a764ddeee"   >test token</a><br>
+                    <a class="button" href="https://{FLASK_URL}/api/v1.0/current?token=60c97f9275130e5b5ad1d72d">test token</a><br>
+                    <a class="button" href="https://{FLASK_URL}/api/v1.0/update?token=60c97f9275130e5b5ad1d72d&key=3717be6ea90134e896da74cf&fqdn=Test.LucImmerzeel.nl&ip=192.168.0.10">test token+key</a><br>
                 """
 
 
@@ -136,7 +138,7 @@ def login():
 @app.route("/sso")
 def login_sso():
     simplelogin = requests_oauthlib.OAuth2Session(
-        CLIENT_ID, redirect_uri="https://localhost:5000/sso/callback"
+        CLIENT_ID, redirect_uri=f"https://{FLASK_URL}/sso/callback"
     )
     authorization_url, _ = simplelogin.authorization_url(AUTHORIZATION_BASE_URL)
 
@@ -167,7 +169,7 @@ def callback_sso():
 
     # Adding to MongoDB
     existingdata = from_db("userdb", "users", {"_id": str(user_info["id"])})
-    print(existingdata)
+    #print(existingdata)
     if existingdata is None:
         to_db("userdb", "users", {"_id": str(user_info["id"]), 'name': user_info["name"],
                                   'email': user_info["email"], 'picture_location': user_info.get('avatar_url')})
@@ -308,23 +310,48 @@ def get_google_provider_cfg():
 # API ###########################################################
 @app.route("/api/v1.0/current", methods=['GET', 'POST'])
 @login_required
-def api_get():
+def flask_api_get():
     from web_scripts.api_response import api_response
-    # from_db()
-    # user = User(
-    #     id_=user_info["id"], name=user_info["name"], email=user_info["email"],
-    #     profile_pic=str(user_info.get('avatar_url'))
-    # )
     token = request.args.get('token')
     find = from_db("userdb", "users", {"token": token})
-    print(current_user.id)
+    #print(current_user.id)
     user_token = User(id_=find["_id"], name=token, email="", profile_pic="")
     login_user(user_token)
     return api_response()
 
 
+@app.route("/api/v1.0/update", methods=['GET', 'POST'])
+@login_required
+def flask_api_update():
+    from web_scripts.api_response import api_update
+    token = request.args.get('token')
+    key = request.args.get('key')
+    find = from_db("userdb", "users", {"token": token})
+    #print(current_user.id)
+    if key == find["apikey"]:
+        user_token = User(id_=find["_id"], name=token, email="", profile_pic="")
+        login_user(user_token)
+    else:
+        return None
+    return api_update()
+
+
+@app.route("/api/v1.0/history", methods=['GET', 'POST'])
+def flask_api_history():
+    from web_scripts.api_response import api_history
+    return api_history()
+
+
 @app.route("/api/v1.0/delete", methods=['GET', 'POST'])
 def api_delete():
-    record_id = request.args.get('_id')
-    update_db("userdb", "users", {"_id": str(current_user.id)},  {"$pull": {"records": record_id}})
+    from bson.objectid import ObjectId
+
+    record_fqdn = request.args.get('fqdn')
+    user_id = request.args.get('id')
+    id_tobe_removed = []
+    for item in all_from_db("userdb", "records", {"FQDN": record_fqdn}):
+        id_tobe_removed.append(ObjectId(item["_id"]))
+    for id in id_tobe_removed:
+        update_db("userdb", "users", {"_id": str(user_id)},  {"$pull": {"records": str(id)}})
+        remove_db("userdb", "records", {"_id": str(id)})
     return redirect(url_for("flask_config_ddns"))

@@ -6,9 +6,11 @@ MONGOHOST = os.environ.get("MONGOHOST", None)
 MONGOUSER = os.environ.get("MONGOUSER", None)
 MONGOPASSWORD = os.environ.get("MONGOPASSWORD", None)
 
-if MONGOHOST == "localhost":
-    mongoclient = pymongo.MongoClient("mongodb://localhost:27017/")
+if MONGOUSER == "" or True:
+    #mongoclient = pymongo.MongoClient("mongodb://localhost:27017/")
+    mongoclient = pymongo.MongoClient("mongodb://ec2-34-203-31-252.compute-1.amazonaws.com:27017/")
 else:
+    print("Using Credentials")
     mongoclient = pymongo.MongoClient("mongodb://{}:{}@{}:27017/".format(MONGOUSER, MONGOPASSWORD, MONGOHOST))
 
 
@@ -49,30 +51,10 @@ def remove_db(database, colomn, list):
 
 
 def test():
-    from bson.objectid import ObjectId
-    record_ids = None
-    records = []
-
-    unique_id = 1
-    email = "no@google.com"
-    picture = "https://it-immerzeel.nl"
-    record_ids = None
-    records = []
-    try:
-        record_ids = from_db("userdb", "users", {"_id": str(101864882111593489975)})["records"]
-        if type(record_ids) is str:
-            print(record_ids)
-            records.append(from_db("userdb", "records", {"_id": ObjectId(record_ids)}))
-            print(records)
-        else:
-            for record_id in record_ids:
-                records = from_db("userdb", "records", {"_id": record_id})
-    except:
-        pass
-    print(records)
-    if records is not None:
-        for record in records:
-            print(record)
+    # print(from_db("userdb", "records", {"FQDN": "Test.LucImmerzeel.nl"}))
+    # array = list(all_from_db("userdb", "records", {"FQDN": "Test.LucImmerzeel.nl"}))
+    # print(array)
+    print(update_db("userdb", "users", {"_id": str(101864882111593489975)},  {"$pull": {"records": "606243583fc992ef450ffc16"}}))
 
 
 test()

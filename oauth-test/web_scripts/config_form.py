@@ -94,13 +94,23 @@ def config_ddns():
     except:
         pass
 
-    if records is not None:
+    all_fqdn = {}
+    all_ip = {}
+    if records is not None and records is not []:
+        #return str(records)
         for record in records:
+            all_fqdn[record["FQDN"]] = record["date_time"]
+            all_ip[record["FQDN"]] = record["IP"]
+
+        for FQDN in all_fqdn:
             existingrecords += f""" <tr>
-                                        <td>{record["FQDN"] if "FQDN" in record else ""}</td>
-                                        <td>{record["IP"] if "IP" in record else ""}</td>
-                                        <td>{record["date_time"] if "date_time" in record else ""}</td>
-                                        <td><a class="button" href="/api/v1.0/delete?_id={record["_id"]}">Delete</a></td>
+                                        <td>{FQDN}</td>
+                                        <td style="text-align:center">{all_ip[FQDN]}</td>
+                                        <td>{all_fqdn[FQDN]}</td>
+                                        <td style="text-align:center">
+                                            <a class="button" href="/api/v1.0/delete?fqdn={FQDN}&id={current_user.id}">Delete</a>
+                                            <a class="button" href="/api/v1.0/history?fqdn={FQDN}&id={current_user.id}">, History</a>
+                                        </td>
                                     </tr>"""
 
     return render_template_string(f""" <h1>DNS Records</h1>
@@ -110,7 +120,7 @@ def config_ddns():
                 <p>
                     <b>Existing DNS records</b><br>
                     <form action="" method="POST" novalidate>
-                        <table>
+                        <table style="border:1px solid black">
                             <tr>
                                 <th>FQDN</th>
                                 <th>IP</th>
