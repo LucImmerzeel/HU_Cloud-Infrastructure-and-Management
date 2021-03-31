@@ -19,7 +19,6 @@ import requests
 from web_scripts.mongodb import to_db, from_db, replace_db, remove_db, update_db, all_from_db
 
 # Internal imports
-
 from user import User, Token
 
 # Configuration
