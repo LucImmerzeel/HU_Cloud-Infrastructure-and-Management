@@ -25,6 +25,8 @@ def load_zones():
             zone_name = data["$origin"]
             json_zone[zone_name] = data
     return json_zone
+
+
 ZONES = load_zones()
 
 
