@@ -1,6 +1,8 @@
 import json
 import os
 
+ZONES_PATH = os.environ.get("ZONES_PATH", None)
+
 QUESTION_TYPES = {
     b"\x00\x01": "a"
 }
@@ -15,7 +17,7 @@ def load_zones():
     try:
         files = os.listdir(zones_path)
     except FileNotFoundError:
-        zones_path = "C:/Users/StudyUser/PycharmProjects/HU_Cloud-Infrastructure-and-Management/dns-server/Zones"
+        zones_path = ZONES_PATH
         files = os.listdir(zones_path)
     for zone_file in os.listdir(zones_path):
         with open(os.path.join(zones_path, zone_file), "r") as f:
