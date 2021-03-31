@@ -113,8 +113,8 @@ def index():
                     <h3>Sign in here:</h3><br>
                     <a class="button" href="/google">Google Login</a><br>
                     <a class="button" href="/sso"   >SSO</a><br>
-                    <a class="button" style="display:none;" href="https://{FLASK_URL}/api/v1.0/current?token=60c97f9275130e5b5ad1d72d">test token</a><br>
-                    <a class="button" style="display:none;" href="https://{FLASK_URL}/api/v1.0/update?token=60c97f9275130e5b5ad1d72d&key=3717be6ea90134e896da74cf&fqdn=Test.LucImmerzeel.nl&ip=192.168.0.10">test token+key</a><br>
+                    <a class="button" style="display:none" href="https://{FLASK_URL}/api/v1.0/current?token=60c97f9275130e5b5ad1d72d">test token</a><br>
+                    <a class="button" style="display:none" href="https://{FLASK_URL}/api/v1.0/update?token=60c97f9275130e5b5ad1d72d&key=3717be6ea90134e896da74cf&fqdn=Test.LucImmerzeel.nl&ip=192.168.0.10">test token+key</a><br>
                 """
 
 
