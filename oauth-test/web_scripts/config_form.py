@@ -74,7 +74,7 @@ def config_ddns():
     #         form.username.data, form.remember_me.data))
     #     return redirect('/')
     if request.method == 'POST':
-        if is_valid_ipv4_address(form.IP.data):
+        if is_valid_ipv4_address(form.IP.data) and form.FQDN.data.find(".") >= 1:
             record_id = str(to_db("userdb", "records",
                               {"FQDN": form.FQDN.data, "IP": form.IP.data,
                                "date_time": str(datetime.now().strftime("%d/%m/%Y %H:%M:%S"))}).inserted_id)

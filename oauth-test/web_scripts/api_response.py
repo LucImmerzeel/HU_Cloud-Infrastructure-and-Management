@@ -5,6 +5,10 @@ from flask_login import current_user
 from bson.objectid import ObjectId
 from datetime import datetime
 from .check_if_ip import is_valid_ipv4_address
+import os
+
+
+ZONES_PATH = os.environ.get("ZONES_PATH", None)
 
 
 def api_response():
@@ -24,14 +28,17 @@ def api_update():
     ip = request.args.get('ip')
 
     if not is_valid_ipv4_address(ip):
-        return f"The ip is not valid, because {ip} is not a valid ip."
+        return f"The IP is not valid, because '{ip}' is not a valid IP."
+
+    if fqdn.find(".") >= 1:
+        return f"The FQDN is not valid, because '{fqdn}' is not a valid FQDN."
 
     record_ids = None
     records = []
     record_ids = from_db("userdb", "users", {"_id": str(current_user.id)})["records"]
 
     try:
-        record_ids = from_db("userdb", "users", {"_id": str(current_user.id)})["records"]
+        #record_ids = from_db("userdb", "users", {"_id": str(current_user.id)})["records"]
         if type(record_ids) is str:
             records.append(from_db("userdb", "records", {"_id": ObjectId(record_ids)}))
         else:
@@ -58,6 +65,9 @@ def api_update():
             update_db("userdb", "users", {"_id": str(current_user.id)}, {"$push": {"records": record_id}})
         except:  # expect that no records exist
             update_db("userdb", "users", {"_id": str(current_user.id)}, {"$set": {"records": [record_id]}})
+
+        if os.path.exists(os.path.join(ZONES_PATH, fqdn + ".zone")):
+
 
     return f"""The IP for "{fqdn}" previously was: {all_ip[fqdn]}. Now it has is set to: {ip}"""
 

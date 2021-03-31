@@ -4,7 +4,7 @@ import unittest
 import os
 import sys
 import unittest.mock as mock
-from dns_generator import DNSGen
+from .dns_generator import DNSGen
 
 
 class TestDnsGen(unittest.TestCase):
