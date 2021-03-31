@@ -54,7 +54,8 @@ def test():
     # print(from_db("userdb", "records", {"FQDN": "Test.LucImmerzeel.nl"}))
     # array = list(all_from_db("userdb", "records", {"FQDN": "Test.LucImmerzeel.nl"}))
     # print(array)
-    print(update_db("userdb", "users", {"_id": str(101864882111593489975)},  {"$pull": {"records": "606243583fc992ef450ffc16"}}))
+    print(all_from_db("userdb", "records", {}))
 
 
-#test()
+
+test()

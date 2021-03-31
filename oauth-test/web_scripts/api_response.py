@@ -5,7 +5,7 @@ from flask_login import current_user
 from bson.objectid import ObjectId
 from datetime import datetime
 from .check_if_ip import is_valid_ipv4_address
-from .dns_records import add_dns_record
+#from .dns_records import add_dns_record
 import os
 
 
@@ -66,7 +66,7 @@ def api_update():
             except:  # expect that no records exist
                 update_db("userdb", "users", {"_id": str(current_user.id)}, {"$set": {"records": [record_id]}})
 
-            add_dns_record(fqdn, ip)
+            #add_dns_record(fqdn, ip)
     except:
         return f"""The FQDN, "{fqdn}", is not registered"""
 
