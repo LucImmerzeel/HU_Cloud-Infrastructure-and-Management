@@ -81,6 +81,7 @@ def config_ddns():
         except:  # expect that no records exist
             update_db("userdb", "users", {"_id": str(current_user.id)}, {"$set": {"records": [record_id]}})
 
+
     existingrecords = ""
     record_ids = None
     records = []

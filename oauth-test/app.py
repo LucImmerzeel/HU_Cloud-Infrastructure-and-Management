@@ -23,8 +23,8 @@ from web_scripts.mongodb import to_db, from_db, replace_db, remove_db, update_db
 from user import User, Token
 
 # Configuration
-INTERPRETER = os.environ.get("INTERPRETER", None)
-DNSSERVER = os.environ.get("DNSSERVER", None)
+#INTERPRETER = os.environ.get("INTERPRETER", None)
+#DNSSERVER = os.environ.get("DNSSERVER", None)
 CERTFOLDER = os.environ.get("CERTFOLDER", None)
 FLASK_URL = os.environ.get("FLASK_URL", None)
 
