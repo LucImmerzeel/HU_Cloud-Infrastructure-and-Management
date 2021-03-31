@@ -6,6 +6,7 @@ from .mongodb import from_db, all_from_db, to_db, update_db
 from flask_login import LoginManager, current_user
 import pymongo
 from datetime import datetime
+from.check_if_ip import is_valid_ipv4_address
 
 
 class AddRecord(FlaskForm):
@@ -73,13 +74,14 @@ def config_ddns():
     #         form.username.data, form.remember_me.data))
     #     return redirect('/')
     if request.method == 'POST':
-        record_id = str(to_db("userdb", "records",
-                          {"FQDN": form.FQDN.data, "IP": form.IP.data,
-                           "date_time": str(datetime.now().strftime("%d/%m/%Y %H:%M:%S"))}).inserted_id)
-        try:
-            update_db("userdb", "users", {"_id": str(current_user.id)}, {"$push": {"records": record_id}})
-        except:  # expect that no records exist
-            update_db("userdb", "users", {"_id": str(current_user.id)}, {"$set": {"records": [record_id]}})
+        if not is_valid_ipv4_address(form.IP.data):
+            record_id = str(to_db("userdb", "records",
+                              {"FQDN": form.FQDN.data, "IP": form.IP.data,
+                               "date_time": str(datetime.now().strftime("%d/%m/%Y %H:%M:%S"))}).inserted_id)
+            try:
+                update_db("userdb", "users", {"_id": str(current_user.id)}, {"$push": {"records": record_id}})
+            except:  # expect that no records exist
+                update_db("userdb", "users", {"_id": str(current_user.id)}, {"$set": {"records": [record_id]}})
 
 
     existingrecords = ""

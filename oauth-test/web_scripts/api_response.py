@@ -4,6 +4,7 @@ from flask import request
 from flask_login import current_user
 from bson.objectid import ObjectId
 from datetime import datetime
+from .check_if_ip import is_valid_ipv4_address
 
 
 def api_response():
@@ -21,6 +22,9 @@ def api_update():
 
     fqdn = request.args.get('fqdn')
     ip = request.args.get('ip')
+
+    if not is_valid_ipv4_address(ip):
+        return "The ip is not valid"
 
     record_ids = None
     records = []
