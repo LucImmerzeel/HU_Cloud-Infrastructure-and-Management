@@ -57,4 +57,4 @@ def test():
     print(update_db("userdb", "users", {"_id": str(101864882111593489975)},  {"$pull": {"records": "606243583fc992ef450ffc16"}}))
 
 
-test()
+#test()
