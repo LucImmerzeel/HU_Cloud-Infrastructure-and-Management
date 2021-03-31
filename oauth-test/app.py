@@ -17,6 +17,7 @@ from oauthlib.oauth2 import WebApplicationClient
 import requests_oauthlib
 import requests
 from web_scripts.mongodb import to_db, from_db, replace_db, remove_db, update_db, all_from_db
+from .db import init_db_command
 
 # Internal imports
 from user import User, Token
@@ -45,6 +46,11 @@ GOOGLE_DISCOVERY_URL = (
 # Flask app setup
 app = Flask(__name__)
 app.secret_key = os.environ.get("SECRET_KEY") or os.urandom(24)
+try:
+    init_db_command()
+except sqlite3.OperationalError:
+    # Assume it's already been created
+    pass
 
 # User session management setup
 # https://flask-login.readthedocs.io/en/latest

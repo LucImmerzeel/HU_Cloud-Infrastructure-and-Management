@@ -7,13 +7,14 @@ import time
 
 INTERPRETER = os.environ.get("INTERPRETER", None)
 DNSSERVER = os.environ.get("DNSSERVER", None)
+DNSSERVER_PATH = os.environ.get("DNSSERVER_PATH", None)
 PIDFOLDER = os.environ.get("PIDFOLDER", None)
 
 
 def restart_dns():
     returnString = stop_dns()
 
-    subprocess.Popen(["sudo " + INTERPRETER + " " + DNSSERVER], stdout=subprocess.PIPE, shell=True, cwd="/home/ec2-user/cim_proj/HU_Cloud-Infrastructure-and-Management/dns-server/")
+    subprocess.Popen(["sudo " + INTERPRETER + " " + DNSSERVER], stdout=subprocess.PIPE, shell=True, cwd=DNSSERVER_PATH)
     print("cd /home/ec2-user/cim_proj/HU_Cloud-Infrastructure-and-Management/dns-server/; ", INTERPRETER, DNSSERVER)
     time.sleep(0.5)
 
