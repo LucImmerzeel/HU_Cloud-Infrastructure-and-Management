@@ -19,7 +19,7 @@ def restart_dns():
     for filename in os.listdir(ZONES_PATH):
         os.remove(os.path.join(ZONES_PATH, filename))
 
-    all_from_db()
+    #all_from_db()
 
 
     subprocess.Popen([INTERPRETER + " " + DNSSERVER], stdout=subprocess.PIPE, shell=True, cwd=DNSSERVER_PATH)
