@@ -54,19 +54,21 @@ def api_update():
         for record in records:
             all_fqdn[record["FQDN"]] = record["date_time"]
             all_ip[record["FQDN"]] = record["IP"]
+    try:
+        if all_ip[fqdn] == ip:
+            return f"""The IP for "{fqdn}" is already: {ip}"""
+        else:
+            record_id = str(to_db("userdb", "records",
+                                  {"FQDN": fqdn, "IP": ip,
+                                   "date_time": str(datetime.now().strftime("%d/%m/%Y %H:%M:%S"))}).inserted_id)
+            try:
+                update_db("userdb", "users", {"_id": str(current_user.id)}, {"$push": {"records": record_id}})
+            except:  # expect that no records exist
+                update_db("userdb", "users", {"_id": str(current_user.id)}, {"$set": {"records": [record_id]}})
 
-    if all_ip[fqdn] == ip:
-        return f"""The IP for "{fqdn}" is already: {ip}"""
-    else:
-        record_id = str(to_db("userdb", "records",
-                              {"FQDN": fqdn, "IP": ip,
-                               "date_time": str(datetime.now().strftime("%d/%m/%Y %H:%M:%S"))}).inserted_id)
-        try:
-            update_db("userdb", "users", {"_id": str(current_user.id)}, {"$push": {"records": record_id}})
-        except:  # expect that no records exist
-            update_db("userdb", "users", {"_id": str(current_user.id)}, {"$set": {"records": [record_id]}})
-
-        add_dns_record(fqdn, ip)
+            add_dns_record(fqdn, ip)
+    except:
+        return f"""The FQDN, "{fqdn}", is not registered"""
 
     return f"""The IP for "{fqdn}" previously was: {all_ip[fqdn]}. Now it has is set to: {ip}"""
 
