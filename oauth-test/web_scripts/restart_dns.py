@@ -13,7 +13,7 @@ PIDFOLDER = os.environ.get("PIDFOLDER", None)
 def restart_dns():
     returnString = stop_dns()
 
-    subprocess.Popen(["sudo" + INTERPRETER + " " + DNSSERVER], stdout=subprocess.PIPE, shell=True, cwd="/home/ec2-user/cim_proj/HU_Cloud-Infrastructure-and-Management/dns-server/")
+    subprocess.Popen(["sudo " + INTERPRETER + " " + DNSSERVER], stdout=subprocess.PIPE, shell=True, cwd="/home/ec2-user/cim_proj/HU_Cloud-Infrastructure-and-Management/dns-server/")
     print("cd /home/ec2-user/cim_proj/HU_Cloud-Infrastructure-and-Management/dns-server/; ", INTERPRETER, DNSSERVER)
     time.sleep(0.5)
 
