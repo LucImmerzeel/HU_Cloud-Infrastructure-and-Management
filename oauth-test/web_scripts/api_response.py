@@ -24,7 +24,7 @@ def api_update():
     ip = request.args.get('ip')
 
     if not is_valid_ipv4_address(ip):
-        return "The ip is not valid"
+        return f"The ip is not valid, because {ip} is not a valid ip."
 
     record_ids = None
     records = []
