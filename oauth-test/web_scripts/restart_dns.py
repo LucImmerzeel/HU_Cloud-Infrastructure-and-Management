@@ -14,6 +14,7 @@ def restart_dns():
     returnString = stop_dns()
 
     subprocess.Popen(["cd /home/ec2-user/cim_proj/HU_Cloud-Infrastructure-and-Management/dns-server/; ", INTERPRETER, DNSSERVER], stdout=subprocess.PIPE, shell=True)
+    print("cd /home/ec2-user/cim_proj/HU_Cloud-Infrastructure-and-Management/dns-server/; ", INTERPRETER, DNSSERVER)
     time.sleep(0.5)
 
     with open(PIDFOLDER, "r") as pid_file:
