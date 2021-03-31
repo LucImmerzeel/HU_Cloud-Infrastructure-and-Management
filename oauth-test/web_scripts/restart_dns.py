@@ -13,7 +13,7 @@ PIDFOLDER = os.environ.get("PIDFOLDER", None)
 def restart_dns():
     returnString = stop_dns()
 
-    subprocess.Popen([ DNSSERVER], stdout=subprocess.PIPE, shell=True)
+    subprocess.Popen([DNSSERVER], stdout=subprocess.PIPE, shell=True)
     time.sleep(0.5)
 
     with open(PIDFOLDER, "r") as pid_file:
