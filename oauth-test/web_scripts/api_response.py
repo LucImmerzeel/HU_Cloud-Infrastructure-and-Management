@@ -5,10 +5,10 @@ from flask_login import current_user
 from bson.objectid import ObjectId
 from datetime import datetime
 from .check_if_ip import is_valid_ipv4_address
+from .dns_records import add_dns_record
 import os
 
 
-ZONES_PATH = os.environ.get("ZONES_PATH", None)
 
 
 def api_response():
@@ -66,8 +66,7 @@ def api_update():
         except:  # expect that no records exist
             update_db("userdb", "users", {"_id": str(current_user.id)}, {"$set": {"records": [record_id]}})
 
-        if os.path.exists(os.path.join(ZONES_PATH, fqdn + ".zone")):
-
+        add_dns_record(fqdn, ip)
 
     return f"""The IP for "{fqdn}" previously was: {all_ip[fqdn]}. Now it has is set to: {ip}"""
 
