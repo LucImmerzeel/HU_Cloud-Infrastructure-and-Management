@@ -5,7 +5,7 @@ ZONES_PATH = os.environ.get("ZONES_PATH", None)
 
 def add_dns_record(fqdn, ip):
     split_fqdn = fqdn.split(".")
-    base_fqdn = split_fqdn[-1] + split_fqdn[-2]
+    base_fqdn = split_fqdn[-2] + split_fqdn[-1]
 
     if os.path.exists(os.path.join(ZONES_PATH, base_fqdn + ".zone")):
         os.remove(os.path.join(ZONES_PATH, base_fqdn + ".zone"))

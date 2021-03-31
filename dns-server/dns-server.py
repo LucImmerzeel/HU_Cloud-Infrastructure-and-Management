@@ -3,7 +3,7 @@ from dns_generator import ClientHandler
 import os
 
 
-PIDFOLDER = os.environ.get("PIDFOLDER", "/home/ec2-user/cim_proj/HU_Cloud-Infrastructure-and-Management/dns-server/pid.id")
+PIDFOLDER = os.environ.get("PIDFOLDER", "/home/ec2-user/HU_Cloud-Infrastructure-and-Management/dns-server/pid.id")
 
 IP = "0.0.0.0"
 PORT = 53
