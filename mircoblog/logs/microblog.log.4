@@ -1,0 +1,62 @@
+2021-03-17 08:47:34,230 INFO: Microblog startup [in C:\Users\StudyUser\PycharmProjects\HU_Cloud-Infrastructure-and-Management\mircoblog\app\__init__.py:47]
+2021-03-17 08:50:51,283 INFO: Microblog startup [in C:\Users\StudyUser\PycharmProjects\HU_Cloud-Infrastructure-and-Management\mircoblog\app\__init__.py:47]
+2021-03-17 11:32:46,408 INFO: Microblog startup [in C:\Users\StudyUser\PycharmProjects\HU_Cloud-Infrastructure-and-Management\mircoblog\app\__init__.py:47]
+2021-03-17 11:57:44,355 INFO: Microblog startup [in C:\Users\StudyUser\PycharmProjects\HU_Cloud-Infrastructure-and-Management\mircoblog\app\__init__.py:47]
+2021-03-17 12:01:37,096 INFO: Microblog startup [in C:\Users\StudyUser\PycharmProjects\HU_Cloud-Infrastructure-and-Management\mircoblog\app\__init__.py:47]
+2021-03-17 12:02:17,940 INFO: Microblog startup [in C:\Users\StudyUser\PycharmProjects\HU_Cloud-Infrastructure-and-Management\mircoblog\app\__init__.py:47]
+2021-03-17 12:02:54,243 ERROR: Exception on /register [POST] [in c:\users\studyuser\pycharmprojects\hu_cloud-infrastructure-and-management\venv\lib\site-packages\flask\app.py:1891]
+Traceback (most recent call last):
+  File "c:\users\studyuser\pycharmprojects\hu_cloud-infrastructure-and-management\venv\lib\site-packages\sqlalchemy\util\_collections.py", line 1008, in __call__
+    return self.registry[key]
+KeyError: <greenlet.greenlet object at 0x00000278744D45C0 (otid=0x00000278744D0200) current active started main>
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "c:\users\studyuser\pycharmprojects\hu_cloud-infrastructure-and-management\venv\lib\site-packages\flask\app.py", line 2447, in wsgi_app
+    response = self.full_dispatch_request()
+  File "c:\users\studyuser\pycharmprojects\hu_cloud-infrastructure-and-management\venv\lib\site-packages\flask\app.py", line 1952, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "c:\users\studyuser\pycharmprojects\hu_cloud-infrastructure-and-management\venv\lib\site-packages\flask\app.py", line 1821, in handle_user_exception
+    reraise(exc_type, exc_value, tb)
+  File "c:\users\studyuser\pycharmprojects\hu_cloud-infrastructure-and-management\venv\lib\site-packages\flask\_compat.py", line 39, in reraise
+    raise value
+  File "c:\users\studyuser\pycharmprojects\hu_cloud-infrastructure-and-management\venv\lib\site-packages\flask\app.py", line 1950, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "c:\users\studyuser\pycharmprojects\hu_cloud-infrastructure-and-management\venv\lib\site-packages\flask\app.py", line 1936, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "C:\Users\StudyUser\PycharmProjects\HU_Cloud-Infrastructure-and-Management\mircoblog\app\routes.py", line 85, in register
+    if form.validate_on_submit():
+  File "c:\users\studyuser\pycharmprojects\hu_cloud-infrastructure-and-management\venv\lib\site-packages\flask_wtf\form.py", line 100, in validate_on_submit
+    return self.is_submitted() and self.validate()
+  File "c:\users\studyuser\pycharmprojects\hu_cloud-infrastructure-and-management\venv\lib\site-packages\wtforms\form.py", line 318, in validate
+    return super(Form, self).validate(extra)
+  File "c:\users\studyuser\pycharmprojects\hu_cloud-infrastructure-and-management\venv\lib\site-packages\wtforms\form.py", line 150, in validate
+    if not field.validate(self, extra):
+  File "c:\users\studyuser\pycharmprojects\hu_cloud-infrastructure-and-management\venv\lib\site-packages\wtforms\fields\core.py", line 226, in validate
+    stop_validation = self._run_validation_chain(form, chain)
+  File "c:\users\studyuser\pycharmprojects\hu_cloud-infrastructure-and-management\venv\lib\site-packages\wtforms\fields\core.py", line 246, in _run_validation_chain
+    validator(form, self)
+  File "C:\Users\StudyUser\PycharmProjects\HU_Cloud-Infrastructure-and-Management\mircoblog\app\forms.py", line 25, in validate_username
+    user = User.query.filter_by(username=username.data).first()
+  File "c:\users\studyuser\pycharmprojects\hu_cloud-infrastructure-and-management\venv\lib\site-packages\flask_sqlalchemy\__init__.py", line 514, in __get__
+    return type.query_class(mapper, session=self.sa.session())
+  File "c:\users\studyuser\pycharmprojects\hu_cloud-infrastructure-and-management\venv\lib\site-packages\sqlalchemy\orm\scoping.py", line 128, in __call__
+    return self.registry()
+  File "c:\users\studyuser\pycharmprojects\hu_cloud-infrastructure-and-management\venv\lib\site-packages\sqlalchemy\util\_collections.py", line 1010, in __call__
+    return self.registry.setdefault(key, self.createfunc())
+  File "c:\users\studyuser\pycharmprojects\hu_cloud-infrastructure-and-management\venv\lib\site-packages\sqlalchemy\orm\session.py", line 4027, in __call__
+    return self.class_(**local_kw)
+  File "c:\users\studyuser\pycharmprojects\hu_cloud-infrastructure-and-management\venv\lib\site-packages\flask_sqlalchemy\__init__.py", line 138, in __init__
+    bind = options.pop('bind', None) or db.engine
+  File "c:\users\studyuser\pycharmprojects\hu_cloud-infrastructure-and-management\venv\lib\site-packages\flask_sqlalchemy\__init__.py", line 943, in engine
+    return self.get_engine()
+  File "c:\users\studyuser\pycharmprojects\hu_cloud-infrastructure-and-management\venv\lib\site-packages\flask_sqlalchemy\__init__.py", line 962, in get_engine
+    return connector.get_engine()
+  File "c:\users\studyuser\pycharmprojects\hu_cloud-infrastructure-and-management\venv\lib\site-packages\flask_sqlalchemy\__init__.py", line 555, in get_engine
+    options = self.get_options(sa_url, echo)
+  File "c:\users\studyuser\pycharmprojects\hu_cloud-infrastructure-and-management\venv\lib\site-packages\flask_sqlalchemy\__init__.py", line 570, in get_options
+    self._sa.apply_driver_hacks(self._app, sa_url, options)
+  File "c:\users\studyuser\pycharmprojects\hu_cloud-infrastructure-and-management\venv\lib\site-packages\flask_sqlalchemy\__init__.py", line 914, in apply_driver_hacks
+    sa_url.database = os.path.join(app.root_path, sa_url.database)
+AttributeError: can't set attribute

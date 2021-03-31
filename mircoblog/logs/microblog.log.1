@@ -1,0 +1,113 @@
+2021-03-17 20:14:39,656 ERROR: Exception on /reset_password_request [POST] [in c:\users\studyuser\pycharmprojects\hu_cloud-infrastructure-and-management\venv\lib\site-packages\flask\app.py:1891]
+Traceback (most recent call last):
+  File "c:\users\studyuser\pycharmprojects\hu_cloud-infrastructure-and-management\venv\lib\site-packages\sqlalchemy\engine\base.py", line 1276, in _execute_context
+    self.dialect.do_execute(
+  File "c:\users\studyuser\pycharmprojects\hu_cloud-infrastructure-and-management\venv\lib\site-packages\sqlalchemy\engine\default.py", line 608, in do_execute
+    cursor.execute(statement, parameters)
+sqlite3.OperationalError: no such table: user
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "c:\users\studyuser\pycharmprojects\hu_cloud-infrastructure-and-management\venv\lib\site-packages\flask\app.py", line 2447, in wsgi_app
+    response = self.full_dispatch_request()
+  File "c:\users\studyuser\pycharmprojects\hu_cloud-infrastructure-and-management\venv\lib\site-packages\flask\app.py", line 1952, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "c:\users\studyuser\pycharmprojects\hu_cloud-infrastructure-and-management\venv\lib\site-packages\flask\app.py", line 1821, in handle_user_exception
+    reraise(exc_type, exc_value, tb)
+  File "c:\users\studyuser\pycharmprojects\hu_cloud-infrastructure-and-management\venv\lib\site-packages\flask\_compat.py", line 39, in reraise
+    raise value
+  File "c:\users\studyuser\pycharmprojects\hu_cloud-infrastructure-and-management\venv\lib\site-packages\flask\app.py", line 1950, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "c:\users\studyuser\pycharmprojects\hu_cloud-infrastructure-and-management\venv\lib\site-packages\flask\app.py", line 1936, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "C:\Users\StudyUser\PycharmProjects\HU_Cloud-Infrastructure-and-Management\mircoblog\app\routes.py", line 101, in reset_password_request
+    user = User.query.filter_by(email=form.email.data).first()
+  File "c:\users\studyuser\pycharmprojects\hu_cloud-infrastructure-and-management\venv\lib\site-packages\sqlalchemy\orm\query.py", line 3429, in first
+    ret = list(self[0:1])
+  File "c:\users\studyuser\pycharmprojects\hu_cloud-infrastructure-and-management\venv\lib\site-packages\sqlalchemy\orm\query.py", line 3203, in __getitem__
+    return list(res)
+  File "c:\users\studyuser\pycharmprojects\hu_cloud-infrastructure-and-management\venv\lib\site-packages\sqlalchemy\orm\query.py", line 3535, in __iter__
+    return self._execute_and_instances(context)
+  File "c:\users\studyuser\pycharmprojects\hu_cloud-infrastructure-and-management\venv\lib\site-packages\sqlalchemy\orm\query.py", line 3560, in _execute_and_instances
+    result = conn.execute(querycontext.statement, self._params)
+  File "c:\users\studyuser\pycharmprojects\hu_cloud-infrastructure-and-management\venv\lib\site-packages\sqlalchemy\engine\base.py", line 1011, in execute
+    return meth(self, multiparams, params)
+  File "c:\users\studyuser\pycharmprojects\hu_cloud-infrastructure-and-management\venv\lib\site-packages\sqlalchemy\sql\elements.py", line 298, in _execute_on_connection
+    return connection._execute_clauseelement(self, multiparams, params)
+  File "c:\users\studyuser\pycharmprojects\hu_cloud-infrastructure-and-management\venv\lib\site-packages\sqlalchemy\engine\base.py", line 1124, in _execute_clauseelement
+    ret = self._execute_context(
+  File "c:\users\studyuser\pycharmprojects\hu_cloud-infrastructure-and-management\venv\lib\site-packages\sqlalchemy\engine\base.py", line 1316, in _execute_context
+    self._handle_dbapi_exception(
+  File "c:\users\studyuser\pycharmprojects\hu_cloud-infrastructure-and-management\venv\lib\site-packages\sqlalchemy\engine\base.py", line 1510, in _handle_dbapi_exception
+    util.raise_(
+  File "c:\users\studyuser\pycharmprojects\hu_cloud-infrastructure-and-management\venv\lib\site-packages\sqlalchemy\util\compat.py", line 182, in raise_
+    raise exception
+  File "c:\users\studyuser\pycharmprojects\hu_cloud-infrastructure-and-management\venv\lib\site-packages\sqlalchemy\engine\base.py", line 1276, in _execute_context
+    self.dialect.do_execute(
+  File "c:\users\studyuser\pycharmprojects\hu_cloud-infrastructure-and-management\venv\lib\site-packages\sqlalchemy\engine\default.py", line 608, in do_execute
+    cursor.execute(statement, parameters)
+sqlalchemy.exc.OperationalError: (sqlite3.OperationalError) no such table: user
+[SQL: SELECT user.id AS user_id, user.username AS user_username, user.email AS user_email, user.password_hash AS user_password_hash, user.about_me AS user_about_me, user.last_seen AS user_last_seen 
+FROM user 
+WHERE user.email = ?
+ LIMIT ? OFFSET ?]
+[parameters: ('spam@spam.lucimmerzeel.nl', 1, 0)]
+(Background on this error at: http://sqlalche.me/e/13/e3q8)
+2021-03-17 20:14:55,381 ERROR: Exception on /reset_password_request [POST] [in c:\users\studyuser\pycharmprojects\hu_cloud-infrastructure-and-management\venv\lib\site-packages\flask\app.py:1891]
+Traceback (most recent call last):
+  File "c:\users\studyuser\pycharmprojects\hu_cloud-infrastructure-and-management\venv\lib\site-packages\sqlalchemy\engine\base.py", line 1276, in _execute_context
+    self.dialect.do_execute(
+  File "c:\users\studyuser\pycharmprojects\hu_cloud-infrastructure-and-management\venv\lib\site-packages\sqlalchemy\engine\default.py", line 608, in do_execute
+    cursor.execute(statement, parameters)
+sqlite3.OperationalError: no such table: user
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "c:\users\studyuser\pycharmprojects\hu_cloud-infrastructure-and-management\venv\lib\site-packages\flask\app.py", line 2447, in wsgi_app
+    response = self.full_dispatch_request()
+  File "c:\users\studyuser\pycharmprojects\hu_cloud-infrastructure-and-management\venv\lib\site-packages\flask\app.py", line 1952, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "c:\users\studyuser\pycharmprojects\hu_cloud-infrastructure-and-management\venv\lib\site-packages\flask\app.py", line 1821, in handle_user_exception
+    reraise(exc_type, exc_value, tb)
+  File "c:\users\studyuser\pycharmprojects\hu_cloud-infrastructure-and-management\venv\lib\site-packages\flask\_compat.py", line 39, in reraise
+    raise value
+  File "c:\users\studyuser\pycharmprojects\hu_cloud-infrastructure-and-management\venv\lib\site-packages\flask\app.py", line 1950, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "c:\users\studyuser\pycharmprojects\hu_cloud-infrastructure-and-management\venv\lib\site-packages\flask\app.py", line 1936, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "C:\Users\StudyUser\PycharmProjects\HU_Cloud-Infrastructure-and-Management\mircoblog\app\routes.py", line 101, in reset_password_request
+    user = User.query.filter_by(email=form.email.data).first()
+  File "c:\users\studyuser\pycharmprojects\hu_cloud-infrastructure-and-management\venv\lib\site-packages\sqlalchemy\orm\query.py", line 3429, in first
+    ret = list(self[0:1])
+  File "c:\users\studyuser\pycharmprojects\hu_cloud-infrastructure-and-management\venv\lib\site-packages\sqlalchemy\orm\query.py", line 3203, in __getitem__
+    return list(res)
+  File "c:\users\studyuser\pycharmprojects\hu_cloud-infrastructure-and-management\venv\lib\site-packages\sqlalchemy\orm\query.py", line 3535, in __iter__
+    return self._execute_and_instances(context)
+  File "c:\users\studyuser\pycharmprojects\hu_cloud-infrastructure-and-management\venv\lib\site-packages\sqlalchemy\orm\query.py", line 3560, in _execute_and_instances
+    result = conn.execute(querycontext.statement, self._params)
+  File "c:\users\studyuser\pycharmprojects\hu_cloud-infrastructure-and-management\venv\lib\site-packages\sqlalchemy\engine\base.py", line 1011, in execute
+    return meth(self, multiparams, params)
+  File "c:\users\studyuser\pycharmprojects\hu_cloud-infrastructure-and-management\venv\lib\site-packages\sqlalchemy\sql\elements.py", line 298, in _execute_on_connection
+    return connection._execute_clauseelement(self, multiparams, params)
+  File "c:\users\studyuser\pycharmprojects\hu_cloud-infrastructure-and-management\venv\lib\site-packages\sqlalchemy\engine\base.py", line 1124, in _execute_clauseelement
+    ret = self._execute_context(
+  File "c:\users\studyuser\pycharmprojects\hu_cloud-infrastructure-and-management\venv\lib\site-packages\sqlalchemy\engine\base.py", line 1316, in _execute_context
+    self._handle_dbapi_exception(
+  File "c:\users\studyuser\pycharmprojects\hu_cloud-infrastructure-and-management\venv\lib\site-packages\sqlalchemy\engine\base.py", line 1510, in _handle_dbapi_exception
+    util.raise_(
+  File "c:\users\studyuser\pycharmprojects\hu_cloud-infrastructure-and-management\venv\lib\site-packages\sqlalchemy\util\compat.py", line 182, in raise_
+    raise exception
+  File "c:\users\studyuser\pycharmprojects\hu_cloud-infrastructure-and-management\venv\lib\site-packages\sqlalchemy\engine\base.py", line 1276, in _execute_context
+    self.dialect.do_execute(
+  File "c:\users\studyuser\pycharmprojects\hu_cloud-infrastructure-and-management\venv\lib\site-packages\sqlalchemy\engine\default.py", line 608, in do_execute
+    cursor.execute(statement, parameters)
+sqlalchemy.exc.OperationalError: (sqlite3.OperationalError) no such table: user
+[SQL: SELECT user.id AS user_id, user.username AS user_username, user.email AS user_email, user.password_hash AS user_password_hash, user.about_me AS user_about_me, user.last_seen AS user_last_seen 
+FROM user 
+WHERE user.email = ?
+ LIMIT ? OFFSET ?]
+[parameters: ('spam@spam.lucimmerzeel.nl', 1, 0)]
+(Background on this error at: http://sqlalche.me/e/13/e3q8)
+2021-03-17 20:15:39,024 INFO: Microblog startup [in C:\Users\StudyUser\PycharmProjects\HU_Cloud-Infrastructure-and-Management\mircoblog\app\__init__.py:47]
