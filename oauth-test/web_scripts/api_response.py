@@ -30,7 +30,7 @@ def api_update():
     if not is_valid_ipv4_address(ip):
         return f"The IP is not valid, because '{ip}' is not a valid IP."
 
-    if fqdn.find(".") >= 1:
+    if not fqdn.find(".") >= 1:
         return f"The FQDN is not valid, because '{fqdn}' is not a valid FQDN."
 
     record_ids = None
