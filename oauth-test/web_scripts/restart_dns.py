@@ -33,7 +33,7 @@ def restart_dns():
 
 
 def make_zones():
-    from check_if_ip import is_valid_ipv4_address
+    from .check_if_ip import is_valid_ipv4_address
     # print(from_db("userdb", "records", {"FQDN": "Test.LucImmerzeel.nl"}))
     # array = list(all_from_db("userdb", "records", {"FQDN": "Test.LucImmerzeel.nl"}))
     # print(array)
