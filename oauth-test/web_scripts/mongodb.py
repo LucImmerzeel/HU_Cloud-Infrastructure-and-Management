@@ -52,7 +52,7 @@ def remove_db(database, colomn, list):
 
 def test():
     ZONES_PATH = os.environ.get("ZONES_PATH", "C:/Users/StudyUser/PycharmProjects/HU_Cloud-Infrastructure-and-Management/dns-server/Zones")
-    from check_if_ip import is_valid_ipv4_address
+    from .check_if_ip import is_valid_ipv4_address
     # print(from_db("userdb", "records", {"FQDN": "Test.LucImmerzeel.nl"}))
     # array = list(all_from_db("userdb", "records", {"FQDN": "Test.LucImmerzeel.nl"}))
     # print(array)
