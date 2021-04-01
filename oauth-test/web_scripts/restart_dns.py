@@ -95,11 +95,11 @@ def make_zones():
 
     for zone in zone_list:
         a_records = ""
-        for subdomain in zone[1]:
-            try:
-                a_records += f""", {{"name": "{subdomain[0]}", "ttl": 400, "value": "{all_ip[subdomain[0] + "." + zone[0]]}" }} """
-            except:
-                continue
+        # for subdomain in zone[1]:
+        #     try:
+        #         a_records += f""", {{"name": "{subdomain[0]}", "ttl": 400, "value": "{all_ip[subdomain[0] + "." + zone[0]]}" }} """
+        #     except:
+        #         continue
         if a_records == "":
             a_records = f""", {{"name": "@", "ttl": 400, "value": "{all_ip[zone[0]]}" }} """
 
