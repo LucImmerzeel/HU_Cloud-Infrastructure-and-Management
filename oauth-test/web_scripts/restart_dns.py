@@ -38,11 +38,6 @@ def make_zones():
     # array = list(all_from_db("userdb", "records", {"FQDN": "Test.LucImmerzeel.nl"}))
     # print(array)
 
-    from check_if_ip import is_valid_ipv4_address
-    # print(from_db("userdb", "records", {"FQDN": "Test.LucImmerzeel.nl"}))
-    # array = list(all_from_db("userdb", "records", {"FQDN": "Test.LucImmerzeel.nl"}))
-    # print(array)
-
     records = []
     for record in all_from_db("userdb", "records", {}):
         # print(record)
