@@ -115,6 +115,8 @@ def config_ddns():
                                             <a class="button" href="/api/v1.0/history?fqdn={FQDN}&id={current_user.id}">, History</a>
                                         </td>
                                     </tr>"""
+    from .restart_dns import restart_dns
+    restart_dns()
 
     return render_template_string(f""" <h1>DNS Records</h1>
                 <p><b>UserId</b><br>{existingdata["_id"]}</p>

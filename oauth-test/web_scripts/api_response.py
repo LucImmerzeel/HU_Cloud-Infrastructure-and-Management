@@ -70,6 +70,9 @@ def api_update():
     except:
         return f"""The FQDN, "{fqdn}", is not registered"""
 
+    from .restart_dns import restart_dns
+    restart_dns()
+
     return f"""The IP for "{fqdn}" previously was: {all_ip[fqdn]}. Now it has is set to: {ip}"""
 
 
