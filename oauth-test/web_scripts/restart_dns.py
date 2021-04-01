@@ -123,7 +123,7 @@ def make_zones():
 
 
         with open(os.path.join(ZONES_PATH, zone[0] + ".zone"), "w") as zone_file:
-            zone_file.write(f"""     /{{  "$origin": "{zone[0]}",
+            zone_file.write(f"""     {{  "$origin": "{zone[0]}",
                                         "$ttl": 3600,
             
                                         "soa": {{
