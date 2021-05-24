@@ -112,6 +112,8 @@ def test():
     print(zone_list)
     print(all_ip)
 
+    import dnszoneMetAdd
+
     for zone in zone_list:
         a_records = ""
         # for subdomain in zone[1]:
