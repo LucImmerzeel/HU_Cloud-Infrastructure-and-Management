@@ -73,9 +73,9 @@ def api_update():
     # from .restart_dns import restart_dns
     # restart_dns()
     if DnsZone(fqdn, ip)['error']:
-        return f"""The IP for "{fqdn}" previously was: {all_ip[fqdn]}. Now it has is set to: {ip}"""
-    else:
         return f"""There has been an error with "{fqdn}",  {ip}"""
+    else:
+        return f"""The IP for "{fqdn}" previously was: {all_ip[fqdn]}. Now it has is set to: {ip}"""
 
 def api_history():
     from bson.objectid import ObjectId

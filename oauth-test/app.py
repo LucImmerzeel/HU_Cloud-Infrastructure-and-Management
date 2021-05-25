@@ -346,6 +346,7 @@ def flask_api_history():
 @app.route("/api/v1.0/delete", methods=['GET', 'POST'])
 def api_delete():
     from bson.objectid import ObjectId
+    from web_scripts.dnszoneMetAdd import DnsZone
 
     record_fqdn = request.args.get('fqdn')
     user_id = request.args.get('id')

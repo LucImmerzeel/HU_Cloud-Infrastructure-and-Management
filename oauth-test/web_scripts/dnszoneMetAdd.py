@@ -22,7 +22,7 @@ class DnsZone:
     '''
     Class that contains DNS zone functionality and works with dnspython
     '''
-    def __init__ (self, zone, nameserver, timeout = 5.0):
+    def __init__(self, zone, nameserver, timeout=5.0):
         '''
         Initialize this DNS zone and corresponding Resolver object.
 
@@ -146,7 +146,7 @@ class DnsZone:
         otherwise
         '''
         if not self.can_contain(fqdn):
-            return { 'error' : True , 'error_text' : f'FQDN "{fqdn}" is not part of zone {self.zone}' }, 400
+            return {'error': True, 'error_text': f'FQDN "{fqdn}" is not part of zone {self.zone}'}, 400
 
         # Create the update record
         my_update = dns.update.Update(self.zone)
@@ -156,7 +156,7 @@ class DnsZone:
         try:
             self._update(my_update)
         except dns.exception.Timeout:
-            return { 'error' : True, 'error_text' : f'connection to nameserver {self.nameserver} timed out' }, 503
+            return {'error': True, 'error_text': f'connection to nameserver {self.nameserver} timed out'}, 503
 
         # Check for success
         return self.check_address(fqdn)
