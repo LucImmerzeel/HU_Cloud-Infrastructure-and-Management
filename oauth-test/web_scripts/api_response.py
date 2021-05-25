@@ -8,7 +8,7 @@ from .check_if_ip import is_valid_ipv4_address
 #from .dns_records import add_dns_record
 import os
 
-
+from dnszoneMetAdd import DnsZone
 
 
 def api_response():
@@ -70,15 +70,15 @@ def api_update():
     except:
         return f"""The FQDN, "{fqdn}", is not registered"""
 
-    from .restart_dns import restart_dns
-    restart_dns()
-
-    return f"""The IP for "{fqdn}" previously was: {all_ip[fqdn]}. Now it has is set to: {ip}"""
-
+    # from .restart_dns import restart_dns
+    # restart_dns()
+    if DnsZone(fqdn, ip)['error']:
+        return f"""The IP for "{fqdn}" previously was: {all_ip[fqdn]}. Now it has is set to: {ip}"""
+    else:
+        return f"""There has been an error with "{fqdn}",  {ip}"""
 
 def api_history():
     from bson.objectid import ObjectId
-
     record_fqdn = request.args.get('fqdn')
     user_id = request.args.get('id')
     id_tobe_shown = []
