@@ -56,9 +56,9 @@ login_manager.init_app(app)
 client = WebApplicationClient(GOOGLE_CLIENT_ID)
 
 # Start DNS
-from web_scripts.restart_dns import restart_dns
+#from web_scripts.restart_dns import restart_dns
 
-restart_dns()
+#restart_dns()
 
 if __name__ == "__main__":
     app.run(ssl_context=(os.path.join(CERTFOLDER, "26417044_localhost.cert"),
