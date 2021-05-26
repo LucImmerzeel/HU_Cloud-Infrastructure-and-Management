@@ -3,6 +3,7 @@ import sys  # Use when calling other scripts
 
 sys.path.append(os.path.realpath('.'))
 sys.path.append(os.path.realpath('../dns-server'))
+sys.path.append(os.path.realpath('../dns-server'))
 
 import json
 import subprocess
@@ -274,18 +275,18 @@ def logout():
     return redirect(url_for("index"))
 
 
-@app.route("/restart-dns")
-@login_required
-def flask_restart_dns():
-    from web_scripts.restart_dns import restart_dns
-    return restart_dns()
-
-
-@app.route("/stop-dns")
-@login_required
-def flask_stop_dns():
-    from web_scripts.stop_dns import stop_dns
-    return stop_dns()
+# @app.route("/restart-dns")
+# @login_required
+# def flask_restart_dns():
+#     from web_scripts.restart_dns import restart_dns
+#     return restart_dns()
+#
+#
+# @app.route("/stop-dns")
+# @login_required
+# def flask_stop_dns():
+#     from web_scripts.stop_dns import stop_dns
+#     return stop_dns()
 
 
 @app.route("/generate_new_token")
