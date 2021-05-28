@@ -21,7 +21,7 @@ def restart_dns():
     for filename in os.listdir(ZONES_PATH):
         os.remove(os.path.join(ZONES_PATH, filename))
 
-    make_zones()
+    make_remote_zones()
 
     #subprocess.Popen([INTERPRETER + " " + DNSSERVER], stdout=subprocess.PIPE, shell=True, cwd=DNSSERVER_PATH)
     #print("cd /home/ec2-user/cim_proj/HU_Cloud-Infrastructure-and-Management/dns-server/; ", INTERPRETER, DNSSERVER)
