@@ -8,7 +8,7 @@ MONGOPASSWORD = os.environ.get("MONGOPASSWORD", None)
 
 if MONGOUSER == "" or True:
     #mongoclient = pymongo.MongoClient("mongodb://localhost:27017/")
-    mongoclient = pymongo.MongoClient("mongodb://3.231.227.116:27017/")
+    mongoclient = pymongo.MongoClient("mongodb://{}:27017/".format(MONGOHOST))
 else:
     print("Using Credentials")
     mongoclient = pymongo.MongoClient("mongodb://{}:{}@{}:27017/".format(MONGOUSER, MONGOPASSWORD, MONGOHOST))
