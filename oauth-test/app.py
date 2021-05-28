@@ -3,6 +3,7 @@ import sys  # Use when calling other scripts
 
 sys.path.append(os.path.realpath('.'))
 sys.path.append(os.path.realpath('../dns-server'))
+sys.path.append(os.path.realpath('../dns-server'))
 
 import json
 import subprocess
@@ -56,9 +57,9 @@ login_manager.init_app(app)
 client = WebApplicationClient(GOOGLE_CLIENT_ID)
 
 # Start DNS
-from web_scripts.restart_dns import restart_dns
+#from web_scripts.restart_dns import restart_dns
 
-restart_dns()
+#restart_dns()
 
 if __name__ == "__main__":
     app.run(ssl_context=(os.path.join(CERTFOLDER, "26417044_localhost.cert"),
@@ -274,18 +275,18 @@ def logout():
     return redirect(url_for("index"))
 
 
-@app.route("/restart-dns")
-@login_required
-def flask_restart_dns():
-    from web_scripts.restart_dns import restart_dns
-    return restart_dns()
-
-
-@app.route("/stop-dns")
-@login_required
-def flask_stop_dns():
-    from web_scripts.stop_dns import stop_dns
-    return stop_dns()
+# @app.route("/restart-dns")
+# @login_required
+# def flask_restart_dns():
+#     from web_scripts.restart_dns import restart_dns
+#     return restart_dns()
+#
+#
+# @app.route("/stop-dns")
+# @login_required
+# def flask_stop_dns():
+#     from web_scripts.stop_dns import stop_dns
+#     return stop_dns()
 
 
 @app.route("/generate_new_token")
@@ -346,6 +347,7 @@ def flask_api_history():
 @app.route("/api/v1.0/delete", methods=['GET', 'POST'])
 def api_delete():
     from bson.objectid import ObjectId
+    from web_scripts.dnszoneMetAdd import DnsZone
 
     record_fqdn = request.args.get('fqdn')
     user_id = request.args.get('id')

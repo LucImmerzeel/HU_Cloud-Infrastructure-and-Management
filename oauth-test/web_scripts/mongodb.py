@@ -8,7 +8,7 @@ MONGOPASSWORD = os.environ.get("MONGOPASSWORD", None)
 
 if MONGOUSER == "" or True:
     #mongoclient = pymongo.MongoClient("mongodb://localhost:27017/")
-    mongoclient = pymongo.MongoClient("mongodb://ec2-34-203-31-252.compute-1.amazonaws.com:27017/")
+    mongoclient = pymongo.MongoClient("mongodb://3.231.227.116:27017/")
 else:
     print("Using Credentials")
     mongoclient = pymongo.MongoClient("mongodb://{}:{}@{}:27017/".format(MONGOUSER, MONGOPASSWORD, MONGOHOST))
@@ -111,6 +111,8 @@ def test():
             zone_list.append(top_zone)
     print(zone_list)
     print(all_ip)
+
+    import dnszoneMetAdd
 
     for zone in zone_list:
         a_records = ""
