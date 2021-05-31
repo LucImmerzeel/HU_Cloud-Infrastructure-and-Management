@@ -97,28 +97,38 @@ def make_zones():
     print(zone_list)
     print(all_ip)
 
+    command = f"""
+tee {DNSSERVER_PATH} <<EOF
+
+EOF"""
+    subprocess.Popen("ssh -t {user}@{host} {cmd}".format(user="ec2-user", host=DNSSERVER, cmd=command), shell=True,
+                     stdout=subprocess.PIPE, stderr=subprocess.PIPE).communicate()
+
+    command = f"sudo rm -r {ZONES_PATH}/*"
+    subprocess.Popen("ssh -t {user}@{host} {cmd}".format(user="ec2-user", host=DNSSERVER, cmd=command), shell=True,
+                     stdout=subprocess.PIPE, stderr=subprocess.PIPE).communicate()
+
     for zone in zone_list:
         a_records = f"""
-                        $TTL    3h
-                        @       IN      SOA     ns1.{zone[0]}. admin.{zone[0]}. (
-                                          1        ; Serial
-                                          3h       ; Refresh after 3 hours
-                                          1h       ; Retry after 1 hour
-                                          1w       ; Expire after 1 week
-                                          1h )     ; Negative caching TTL of 1 day
-                        ;
-                        @       IN      NS      ns1.{zone[0]}.
-                    """
+$TTL    3h
+@       IN      SOA     ns1.{zone[0]}. admin.{zone[0]}. (
+                  1        ; Serial
+                  3h       ; Refresh after 3 hours
+                  1h       ; Retry after 1 hour
+                  1w       ; Expire after 1 week
+                  1h )     ; Negative caching TTL of 1 day
+;
+@       IN      NS      ns1.{zone[0]}."""
 
         for subdomain in zone[1]:
             try:
-                a_records += f""" {subdomain[0]}  IN      A       {all_ip[subdomain[0] + "." + zone[0]]}
-                                """
+                a_records += f"""
+{subdomain[0]}  IN      A       {all_ip[subdomain[0] + "." + zone[0]]}"""
             except:
                 continue
         if a_records == "":
-            a_records = f""" @  IN      A       {all_ip[subdomain[0] + "." + zone[0]]}
-                        """
+            a_records = f"""
+@  IN      A       {all_ip[subdomain[0] + "." + zone[0]]}"""
 
         """
         ns1                     IN      A       192.168.0.10
@@ -163,11 +173,11 @@ def make_zones():
         #                                 "ns": [{{"host": "ns1.{zone[0]}"}}, {{"host": "ns2.{zone[0]}"}}],
         #                                 "a": [{a_records[1:]}]}}""")
 
-        command = f"""   tee {ZONES_PATH}/{zone[0]}.zone <<EOF
-                        {a_records}
-                        EOF;
-                    """
-
-        subprocess.Popen("ssh {user}@{host} {cmd}".format(user="ec2-user", host=DNSSERVER, cmd=command), shell=True,
+        command = f"""  
+tee {ZONES_PATH}/{zone[0]}.zone <<EOF
+{a_records}
+EOF
+        """
+        subprocess.Popen("ssh -t {user}@{host} {cmd}".format(user="ec2-user", host=DNSSERVER, cmd=command), shell=True,
                          stdout=subprocess.PIPE, stderr=subprocess.PIPE).communicate()
         # if asking for sudo password: ssh -t {user}@{host} {cmd}
