@@ -116,7 +116,7 @@ def config_ddns():
                                         </td>
                                     </tr>"""
     from .restart_dns import restart_dns
-    #restart_dns()
+    restart_dns()
 
     return render_template_string(f""" <h1>DNS Records</h1>
                 <p><b>UserId</b><br>{existingdata["_id"]}</p>
