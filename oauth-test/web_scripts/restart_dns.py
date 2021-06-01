@@ -99,7 +99,30 @@ def make_zones():
 
     command = f"""
 tee {DNSSERVER_PATH} <<EOF
+options {{  listen-on port 53 {{ 127.0.0.1; 0.0.0.0; }};
+            directory       "/var/named";
+            dump-file       "/var/named/data/cache_dump.db";
+            statistics-file "/var/named/data/named_stats.txt";
+            memstatistics-file "/var/named/data/named_mem_stats.txt";
+            recursing-file  "/var/named/data/named.recursing";
+            secroots-file   "/var/named/data/named.secroots";
+            allow-query     {{ any; }};
+            recursion no;
+    
+            dnssec-enable yes; dnssec-validation yes;
+    
+            /* Path to ISC DLV key */
+            bindkeys-file "/etc/named.root.key";
+    
+            managed-keys-directory "/var/named/dynamic";
+    
+            pid-file "/run/named/named.pid";
+            session-keyfile "/run/named/session.key";}};
 
+logging {{channel default_debug {{file "data/named.run"; severity dynamic;}};}};
+zone "." IN {{ type hint; file "named.ca"; }};
+include "/etc/named.rfc1912.zones";
+include "/etc/named.root.key";
 EOF"""
     subprocess.Popen("ssh -t {user}@{host} {cmd}".format(user="ec2-user", host=DNSSERVER, cmd=command), shell=True,
                      stdout=subprocess.PIPE, stderr=subprocess.PIPE).communicate()
