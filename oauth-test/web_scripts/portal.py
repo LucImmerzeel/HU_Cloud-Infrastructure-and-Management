@@ -11,8 +11,6 @@ def portal():
      <p>
          <a class="button" href="/settings"    >Settings</a><br>
          <a class="button" href="/ddns"        >DDNS</a><br>
-         <a class="button" href="/restart-dns" >Restart DNS Server</a><br>
-         <a class="button" href="/stop-dns"    >Stop    DNS Server</a>
      </p>
      <a class="button" href="/logout"      >Logout</a><br>
 

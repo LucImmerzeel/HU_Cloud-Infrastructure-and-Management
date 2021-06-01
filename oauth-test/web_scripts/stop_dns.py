@@ -3,6 +3,7 @@ import os
 
 PIDFOLDER = os.environ.get("PIDFOLDER", None)
 
+
 def stop_dns():
     with open(PIDFOLDER, "r") as pid_file:
         pid = int(pid_file.read())

@@ -8,7 +8,7 @@ from .check_if_ip import is_valid_ipv4_address
 #from .dns_records import add_dns_record
 import os
 
-from dnszoneMetAdd import DnsZone
+#from dnszoneMetAdd import DnsZone
 
 
 def api_response():

@@ -15,7 +15,7 @@ PIDFOLDER = os.environ.get("PIDFOLDER", None)
 
 
 def restart_dns():
-    returnString = stop_dns()
+    returnString = "stop_dns()"
 
     # Removing all existing
     for filename in os.listdir(ZONES_PATH):
@@ -109,6 +109,15 @@ EOF"""
                      stdout=subprocess.PIPE, stderr=subprocess.PIPE).communicate()
 
     for zone in zone_list:
+        command = f"""
+tee {DNSSERVER_PATH} <<EOF
+
+EOF"""
+        subprocess.Popen("ssh -t {user}@{host} {cmd}".format(user="ec2-user", host=DNSSERVER, cmd=command), shell=True,
+                         stdout=subprocess.PIPE, stderr=subprocess.PIPE).communicate()
+
+
+
         a_records = f"""
 $TTL    3h
 @       IN      SOA     ns1.{zone[0]}. admin.{zone[0]}. (
