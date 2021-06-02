@@ -1,5 +1,5 @@
-#!/usr/bin/python3 
-
+#!/usr/bin/python3
+import paramiko
 import psutil
 import subprocess
 from .stop_dns import stop_dns
@@ -12,6 +12,7 @@ INTERPRETER = os.environ.get("INTERPRETER", None)
 DNSSERVER = os.environ.get("DNSSERVER", None)
 DNSSERVER_PATH = os.environ.get("DNSSERVER_PATH", None)
 PIDFOLDER = os.environ.get("PIDFOLDER", None)
+CERTFILE = os.environ.get("CERTFILE", None)
 
 
 def restart_dns():
@@ -97,6 +98,7 @@ def make_zones():
     print(zone_list)
     print(all_ip)
 
+
     command = f"""
 tee {DNSSERVER_PATH} <<EOF
 options {{  listen-on port 53 {{ 127.0.0.1; 0.0.0.0; }};
@@ -124,20 +126,17 @@ zone "." IN {{ type hint; file "named.ca"; }};
 include "/etc/named.rfc1912.zones";
 include "/etc/named.root.key";
 EOF"""
-    subprocess.Popen("ssh -t {user}@{host} {cmd}".format(user="ec2-user", host=DNSSERVER, cmd=command), shell=True,
-                     stdout=subprocess.PIPE, stderr=subprocess.PIPE).communicate()
+    to_ssh(command)
 
     command = f"sudo rm -r {ZONES_PATH}/*"
-    subprocess.Popen("ssh -t {user}@{host} {cmd}".format(user="ec2-user", host=DNSSERVER, cmd=command), shell=True,
-                     stdout=subprocess.PIPE, stderr=subprocess.PIPE).communicate()
+    to_ssh(command)
 
     for zone in zone_list:
         command = f"""
 tee {DNSSERVER_PATH} <<EOF
 
 EOF"""
-        subprocess.Popen("ssh -t {user}@{host} {cmd}".format(user="ec2-user", host=DNSSERVER, cmd=command), shell=True,
-                         stdout=subprocess.PIPE, stderr=subprocess.PIPE).communicate()
+        to_ssh(command)
 
 
 
@@ -210,6 +209,18 @@ tee {ZONES_PATH}/{zone[0]}.zone <<EOF
 {a_records}
 EOF
         """
-        subprocess.Popen("ssh -t {user}@{host} {cmd}".format(user="ec2-user", host=DNSSERVER, cmd=command), shell=True,
-                         stdout=subprocess.PIPE, stderr=subprocess.PIPE).communicate()
-        # if asking for sudo password: ssh -t {user}@{host} {cmd}
+        to_ssh(command)
+
+
+def to_ssh(command):
+    import base64
+    import paramiko
+
+    privkey = paramiko.RSAKey.from_private_key_file(CERTFILE)  # CHANGE
+    client = paramiko.SSHClient()
+    client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+    #client.get_host_keys().add('127.0.0.1')
+    client.connect(DNSSERVER, username='ec2-user', pkey=privkey)
+    stdin, stdout, stderr = client.exec_command(command)
+
+    client.close()
