@@ -119,7 +119,7 @@ options {{  listen-on port 53 {{ 127.0.0.1; 0.0.0.0; }};
             managed-keys-directory "/var/named/dynamic";
     
             pid-file "/run/named/named.pid";
-            session-keyfile "/run/named/session.key";}};
+            session-keyfile "/run/named/session.key";   }};
 
 logging {{channel default_debug {{file "data/named.run"; severity dynamic;}};}};
 zone "." IN {{ type hint; file "named.ca"; }};
@@ -128,13 +128,16 @@ include "/etc/named.root.key";
 EOF"""
     to_ssh(command)
 
-    command = f"sudo rm -r {ZONES_PATH}/*"
+    command = f"rm -r {ZONES_PATH}/*"
     to_ssh(command)
 
     for zone in zone_list:
         command = f"""
-tee {DNSSERVER_PATH} <<EOF
-
+tee -a {DNSSERVER_PATH} <<EOF
+zone "{zone[0]}" {{
+    type master;
+    file "{ZONES_PATH}/{zone[0]}";
+}};
 EOF"""
         to_ssh(command)
 
@@ -210,17 +213,20 @@ tee {ZONES_PATH}/{zone[0]}.zone <<EOF
 EOF
         """
         to_ssh(command)
+        command = f"""systemctl reload named"""
+        to_ssh(command)
 
 
 def to_ssh(command):
     import base64
     import paramiko
 
-    privkey = paramiko.RSAKey.from_private_key_file(CERTFILE)  # CHANGE
+    privkey = paramiko.RSAKey.from_private_key_file(CERTFILE)
     client = paramiko.SSHClient()
     client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
     #client.get_host_keys().add('127.0.0.1')
     client.connect(DNSSERVER, username='ec2-user', pkey=privkey)
-    stdin, stdout, stderr = client.exec_command(command)
+    stdin, stdout, stderr = client.exec_command("sudo " + command)
 
     client.close()
+    return stdin, stdout, stderr
