@@ -126,9 +126,11 @@ zone "." IN {{ type hint; file "named.ca"; }};
 include "/etc/named.rfc1912.zones";
 include "/etc/named.root.key";
 EOF"""
+    print(command)
     to_ssh(command)
 
     command = f"rm -r {ZONES_PATH}/*"
+    print(command)
     to_ssh(command)
 
     for zone in zone_list:
@@ -139,6 +141,7 @@ zone "{zone[0]}" {{
     file "{ZONES_PATH}/{zone[0]}";
 }};
 EOF"""
+        print(command)
         to_ssh(command)
 
 
@@ -212,8 +215,10 @@ tee {ZONES_PATH}/{zone[0]}.zone <<EOF
 {a_records}
 EOF
         """
+        print(command)
         to_ssh(command)
         command = f"""systemctl reload named"""
+        print(command)
         to_ssh(command)
 
 
