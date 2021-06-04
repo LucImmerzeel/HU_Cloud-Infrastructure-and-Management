@@ -138,7 +138,7 @@ EOF"""
 sudo tee -a {DNSSERVER_PATH} <<EOF
 zone "{zone[0]}" {{
     type master;
-    file "{ZONES_PATH}{zone[0]}";
+    file "{ZONES_PATH}{zone[0]}.zone";
 }};
 EOF"""
         print(command)
