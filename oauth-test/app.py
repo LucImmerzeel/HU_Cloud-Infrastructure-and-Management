@@ -275,13 +275,13 @@ def logout():
     return redirect(url_for("index"))
 
 
-# @app.route("/restart-dns")
-# @login_required
-# def flask_restart_dns():
-#     from web_scripts.restart_dns import restart_dns
-#     return restart_dns()
-#
-#
+@app.route("/restart-dns")
+@login_required
+def flask_restart_dns():
+    from web_scripts.restart_dns import restart_dns
+    return restart_dns()
+
+
 # @app.route("/stop-dns")
 # @login_required
 # def flask_stop_dns():
@@ -347,7 +347,7 @@ def flask_api_history():
 @app.route("/api/v1.0/delete", methods=['GET', 'POST'])
 def api_delete():
     from bson.objectid import ObjectId
-    from web_scripts.dnszoneMetAdd import DnsZone
+    #from web_scripts.dnszoneMetAdd import DnsZone
 
     record_fqdn = request.args.get('fqdn')
     user_id = request.args.get('id')
