@@ -16,7 +16,7 @@ CERTFILE = os.environ.get("CERTFILE", None)
 
 
 def restart_dns():
-    returnString = "stop_dns()"
+    returnString = "" #"stop_dns()"
 
     # Removing all existing
     for filename in os.listdir(ZONES_PATH):
