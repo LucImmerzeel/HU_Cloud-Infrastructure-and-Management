@@ -100,7 +100,7 @@ def make_zones():
 
 
     command = f"""
-tee {DNSSERVER_PATH} <<EOF
+sudo tee {DNSSERVER_PATH} <<EOF
 options {{  listen-on port 53 {{ 127.0.0.1; 0.0.0.0; }};
             directory       "/var/named";
             dump-file       "/var/named/data/cache_dump.db";
@@ -129,13 +129,13 @@ EOF"""
     print(command)
     to_ssh(command)
 
-    command = f"rm -r {ZONES_PATH}/*"
+    command = f"sudo rm -r {ZONES_PATH}/*"
     print(command)
     to_ssh(command)
 
     for zone in zone_list:
         command = f"""
-tee -a {DNSSERVER_PATH} <<EOF
+sudo tee -a {DNSSERVER_PATH} <<EOF
 zone "{zone[0]}" {{
     type master;
     file "{ZONES_PATH}/{zone[0]}";
@@ -211,7 +211,7 @@ $TTL    3h
         #                                 "a": [{a_records[1:]}]}}""")
 
         command = f"""  
-tee {ZONES_PATH}/{zone[0]}.zone <<EOF
+sudo tee {ZONES_PATH}/{zone[0]}.zone <<EOF
 {a_records}
 EOF
         """
@@ -231,7 +231,7 @@ def to_ssh(command):
     client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
     #client.get_host_keys().add('127.0.0.1')
     client.connect(DNSSERVER, username='ec2-user', pkey=privkey)
-    stdin, stdout, stderr = client.exec_command("sudo " + command)
+    stdin, stdout, stderr = client.exec_command(command)
 
     print("Output: " + stdout.read().decode('utf-8'))
     print("Error: " + stderr.read().decode('utf-8'))
