@@ -233,5 +233,7 @@ def to_ssh(command):
     client.connect(DNSSERVER, username='ec2-user', pkey=privkey)
     stdin, stdout, stderr = client.exec_command("sudo " + command)
 
+    print("Output: " + stdout.read())
+    print("Error: " + stderr.read())
     client.close()
     return stdin, stdout, stderr
