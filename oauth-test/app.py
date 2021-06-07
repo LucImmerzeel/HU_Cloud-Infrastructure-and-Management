@@ -18,7 +18,7 @@ from oauthlib.oauth2 import WebApplicationClient
 import requests_oauthlib
 import requests
 from web_scripts.mongodb import to_db, from_db, replace_db, remove_db, update_db, all_from_db
-from .db import init_db_command
+#from .db import init_db_command
 
 # Internal imports
 from user import User, Token
