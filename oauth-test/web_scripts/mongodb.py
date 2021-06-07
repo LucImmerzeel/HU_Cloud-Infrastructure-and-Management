@@ -1,5 +1,5 @@
 import pymongo
-import sys
+#import sys
 import os
 
 MONGOHOST = os.environ.get("MONGOHOST", None)
@@ -112,7 +112,7 @@ def test():
     print(zone_list)
     print(all_ip)
 
-    import dnszoneMetAdd
+    #import dnszoneMetAdd
 
     for zone in zone_list:
         a_records = ""
