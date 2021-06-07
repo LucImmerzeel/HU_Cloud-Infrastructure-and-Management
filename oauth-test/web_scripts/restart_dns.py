@@ -154,8 +154,7 @@ EOF"""
                   1h       ; Retry after 1 hour
                   1w       ; Expire after 1 week
                   1h )     ; Negative caching TTL of 1 day
-@       IN      NS      ns1.{zone[0]}.
-ns1     IN      A       {all_ip[subdomain[0] + "." + zone[0]]}"""
+@       IN      NS      ns1.{zone[0]}."""
 
         for subdomain in zone[1]:
             try:
@@ -166,6 +165,9 @@ ns1     IN      A       {all_ip[subdomain[0] + "." + zone[0]]}"""
         if a_records == "":
             a_records = f"""
 @       IN      A       {all_ip[subdomain[0] + "." + zone[0]]}"""
+
+        a_records += f"""
+ns1     IN      A       {all_ip[subdomain[0] + "." + zone[0]]}"""
 
         """
         ns1                     IN      A       192.168.0.10
