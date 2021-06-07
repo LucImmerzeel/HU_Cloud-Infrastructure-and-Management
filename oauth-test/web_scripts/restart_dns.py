@@ -219,7 +219,7 @@ EOF
         """
         print(command)
         to_ssh(command)
-        command = f"""systemctl reload named"""
+        command = f"""systemctl restart named"""
         print(command)
         to_ssh(command)
 
