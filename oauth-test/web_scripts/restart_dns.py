@@ -138,7 +138,7 @@ EOF"""
 sudo tee -a {DNSSERVER_PATH} <<EOF
 zone "{zone[0]}" {{
     type master;
-    file "{ZONES_PATH}/{zone[0]}.zone";
+    file "{ZONES_PATH}{zone[0]}.zone";
 }};
 EOF"""
         print(command)
@@ -211,7 +211,7 @@ $TTL    3h
         #                                 "a": [{a_records[1:]}]}}""")
 
         command = f"""  
-sudo tee {ZONES_PATH}/{zone[0]}.zone <<EOF
+sudo tee {ZONES_PATH}{zone[0]}.zone <<EOF
 {a_records}
 EOF
         """
