@@ -147,14 +147,13 @@ EOF"""
 
 
         a_records = f"""
-$TTL    3h
+\$TTL    3h
 @       IN      SOA     ns1.{zone[0]}. admin.{zone[0]}. (
                   1        ; Serial
                   3h       ; Refresh after 3 hours
                   1h       ; Retry after 1 hour
                   1w       ; Expire after 1 week
                   1h )     ; Negative caching TTL of 1 day
-;
 @       IN      NS      ns1.{zone[0]}."""
 
         for subdomain in zone[1]:
@@ -165,7 +164,7 @@ $TTL    3h
                 continue
         if a_records == "":
             a_records = f"""
-@  IN      A       {all_ip[subdomain[0] + "." + zone[0]]}"""
+@       IN      A       {all_ip[subdomain[0] + "." + zone[0]]}"""
 
         """
         ns1                     IN      A       192.168.0.10
