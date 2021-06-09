@@ -228,8 +228,9 @@ EOF
 def to_ssh(command):
     import base64
     import paramiko
+    import io
 
-    privkey = paramiko.DSSKey(data=base64.b64decode(CERTBASE))
+    privkey = paramiko.RSAKey.from_private_key(io.StringIO(CERTBASE))
     #privkey = paramiko.RSAKey.from_private_key_file(CERTFILE)
     client = paramiko.SSHClient()
     client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
