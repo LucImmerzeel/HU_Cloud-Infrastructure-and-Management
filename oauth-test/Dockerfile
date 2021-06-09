@@ -1,16 +1,9 @@
 FROM python:3.7.9
 
-ARG ssh_prv_key
-
-RUN mkdir -p /root/.ssh
-RUN echo "$ssh_prv_key" > /root/.ssh/TEMP.pem
-RUN chmod 600 /root/.ssh/TEMP.pem
-
 WORKDIR /app
 
 COPY requirements.txt requirements.txt
 RUN pip3 install -r requirements.txt
-
 
 COPY . .
 
