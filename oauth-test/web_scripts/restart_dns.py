@@ -20,8 +20,8 @@ def restart_dns():
     returnString = "" #"stop_dns()"
 
     # Removing all existing
-    for filename in os.listdir(ZONES_PATH):
-        os.remove(os.path.join(ZONES_PATH, filename))
+    #for filename in os.listdir(ZONES_PATH):
+    #    os.remove(os.path.join(ZONES_PATH, filename))
 
     make_zones()
 
