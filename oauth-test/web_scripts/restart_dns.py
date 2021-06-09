@@ -13,7 +13,7 @@ DNSSERVER = os.environ.get("DNSSERVER", None)
 DNSSERVER_PATH = os.environ.get("DNSSERVER_PATH", None)
 PIDFOLDER = os.environ.get("PIDFOLDER", None)
 CERTFILE = os.environ.get("CERTFILE", None)
-CERTBASE = os.environ.get("CERT64", None)
+CERTBASE = os.environ.get("CERTBASE", None)
 
 
 def restart_dns():
