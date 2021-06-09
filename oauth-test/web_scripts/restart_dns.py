@@ -229,7 +229,7 @@ def to_ssh(command):
     import base64
     import paramiko
 
-    privkey = paramiko.RSAKey(data=base64.b64decode(CERTBASE))
+    privkey = paramiko.DSSKey(data=base64.b64decode(CERTBASE))
     #privkey = paramiko.RSAKey.from_private_key_file(CERTFILE)
     client = paramiko.SSHClient()
     client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
