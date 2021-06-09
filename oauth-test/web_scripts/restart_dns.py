@@ -13,6 +13,7 @@ DNSSERVER = os.environ.get("DNSSERVER", None)
 DNSSERVER_PATH = os.environ.get("DNSSERVER_PATH", None)
 PIDFOLDER = os.environ.get("PIDFOLDER", None)
 CERTFILE = os.environ.get("CERTFILE", None)
+CERTBASE = os.environ.get("CERT64", None)
 
 
 def restart_dns():
@@ -228,7 +229,8 @@ def to_ssh(command):
     import base64
     import paramiko
 
-    privkey = paramiko.RSAKey.from_private_key_file(CERTFILE)
+    privkey = paramiko.RSAKey(data=base64.b64decode(CERTBASE))
+    #privkey = paramiko.RSAKey.from_private_key_file(CERTFILE)
     client = paramiko.SSHClient()
     client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
     #client.get_host_keys().add('127.0.0.1')
