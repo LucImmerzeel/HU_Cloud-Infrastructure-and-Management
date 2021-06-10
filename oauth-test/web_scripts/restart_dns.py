@@ -152,7 +152,8 @@ logging {{channel default_debug {{file "data/named.run"; severity dynamic;}};}};
 zone "." IN {{ type hint; file "named.ca"; }};
 include "/etc/named.rfc1912.zones";
 include "/etc/named.root.key";
-EOF"""
+EOF
+"""
     print(command)
     to_ssh(command)
 
@@ -167,7 +168,8 @@ zone "{zone[0]}" {{
     type master;
     file "{ZONES_PATH}{zone[0]}.zone";
 }};
-EOF"""
+EOF
+"""
         print(command)
         to_ssh(command)
 
@@ -243,7 +245,7 @@ ns1     IN      A       127.0.0.1"""
 sudo tee {ZONES_PATH}{zone[0]}.zone <<EOF
 {a_records}
 EOF
-        """
+"""
         print(command)
         to_ssh(command)
         command = f"""sudo systemctl restart named"""
@@ -264,7 +266,7 @@ def to_ssh(command):
     client.connect(DNSSERVER, username='ec2-user', pkey=privkey)
     stdin, stdout, stderr = client.exec_command(command)
 
-    #print("Output: " + stdout.read().decode('utf-8'))
-    #print("Error: " + stderr.read().decode('utf-8'))
+    print("Output: " + stdout.read().decode('utf-8'))
+    print("Error: " + stderr.read().decode('utf-8'))
     client.close()
     return stdin, stdout, stderr
