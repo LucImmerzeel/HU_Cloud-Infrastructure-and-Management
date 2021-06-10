@@ -128,7 +128,7 @@ def make_zones():
 
     command = f"""
 sudo tee {DNSSERVER_PATH} <<EOF
-options {{  listen-on port 53 {{ 127.0.0.1; 0.0.0.0; }};
+options {{  listen-on port 53 {{ 0.0.0.0; }};
             directory       "/var/named";
             dump-file       "/var/named/data/cache_dump.db";
             statistics-file "/var/named/data/named_stats.txt";
