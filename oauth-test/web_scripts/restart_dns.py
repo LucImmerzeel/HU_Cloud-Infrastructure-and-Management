@@ -193,7 +193,7 @@ EOF
                 continue
         if b_records == "":
             b_records = f"""
-@       IN      A       {all_ip[subdomain[0] + "." + zone[0]]}"""
+@       IN      A       {all_ip[zone[0]]}"""
 
         a_records += b_records + """
 ns1     IN      A       127.0.0.1"""
