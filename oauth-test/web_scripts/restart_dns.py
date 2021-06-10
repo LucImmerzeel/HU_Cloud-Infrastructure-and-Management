@@ -174,7 +174,7 @@ EOF
         to_ssh(command)
 
 
-        b_records
+        b_records = ""
         a_records = f"""
 \$TTL    3h
 @       IN      SOA     ns1.{zone[0]}. admin.{zone[0]}. (
