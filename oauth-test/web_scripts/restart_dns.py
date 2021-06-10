@@ -174,7 +174,7 @@ EOF
         to_ssh(command)
 
 
-
+        b_records
         a_records = f"""
 \$TTL    3h
 @       IN      SOA     ns1.{zone[0]}. admin.{zone[0]}. (
@@ -187,15 +187,15 @@ EOF
 
         for subdomain in zone[1]:
             try:
-                a_records += f"""
+                b_records += f"""
 {subdomain[0]}  IN      A       {all_ip[subdomain[0] + "." + zone[0]]}"""
             except:
                 continue
-        if a_records == "":
-            a_records = f"""
+        if b_records == "":
+            b_records = f"""
 @       IN      A       {all_ip[subdomain[0] + "." + zone[0]]}"""
 
-        a_records += f"""
+        a_records += b_records + """
 ns1     IN      A       127.0.0.1"""
 
         """
