@@ -153,13 +153,16 @@ zone "." IN {{ type hint; file "named.ca"; }};
 include "/etc/named.rfc1912.zones";
 include "/etc/named.root.key";
 EOF
+
+sudo rm -r {ZONES_PATH}/*
+
 """
     print(command)
     to_ssh(command)
 
-    command = f"sudo rm -r {ZONES_PATH}/*"
-    print(command)
-    to_ssh(command)
+    #command = f"sudo rm -r {ZONES_PATH}/*"
+    #print(command)
+    #to_ssh(command)
 
     for zone in zone_list:
         command = f"""
@@ -171,7 +174,7 @@ zone "{zone[0]}" {{
 EOF
 """
         print(command)
-        to_ssh(command)
+        #to_ssh(command)
 
 
         b_records = ""
@@ -223,7 +226,7 @@ ns1     IN      A       127.0.0.1"""
         #                     "a": [{a_records[1:]}]}}""")
 
 
-        print(a_records)
+        #print(a_records)
 
         # with open(os.path.join(ZONES_PATH, zone[0] + ".zone"), "w") as zone_file:
         #     zone_file.write(f"""     {{  "$origin": "{zone[0]}",
@@ -241,7 +244,7 @@ ns1     IN      A       127.0.0.1"""
         #                                 "ns": [{{"host": "ns1.{zone[0]}"}}, {{"host": "ns2.{zone[0]}"}}],
         #                                 "a": [{a_records[1:]}]}}""")
 
-        command = f"""  
+        command = command + "\n" + f"""  
 sudo tee {ZONES_PATH}{zone[0]}.zone <<EOF
 {a_records}
 EOF
