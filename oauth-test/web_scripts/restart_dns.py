@@ -248,9 +248,9 @@ EOF
 """
         print(command)
         to_ssh(command)
-        command = f"""sudo systemctl restart named"""
-        print(command)
-        to_ssh(command)
+    command = f"""sudo systemctl restart named"""
+    print(command)
+    to_ssh(command)
 
 
 def to_ssh(command):
