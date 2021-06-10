@@ -194,7 +194,7 @@ EOF"""
 @       IN      A       {all_ip[subdomain[0] + "." + zone[0]]}"""
 
         a_records += f"""
-ns1     IN      A       {all_ip[subdomain[0] + "." + zone[0]]}"""
+ns1     IN      A       127.0.0.1"""
 
         """
         ns1                     IN      A       192.168.0.10
@@ -256,8 +256,6 @@ def to_ssh(command):
     import paramiko
     from io import StringIO
 
-    print(CERTBASE)
-    print(StringIO(CERTBASE))
     privkey = paramiko.RSAKey.from_private_key(StringIO(CERTBASE))
     #privkey = paramiko.RSAKey.from_private_key_file(CERTFILE)
     client = paramiko.SSHClient()
@@ -266,7 +264,7 @@ def to_ssh(command):
     client.connect(DNSSERVER, username='ec2-user', pkey=privkey)
     stdin, stdout, stderr = client.exec_command(command)
 
-    print("Output: " + stdout.read().decode('utf-8'))
-    print("Error: " + stderr.read().decode('utf-8'))
+    #print("Output: " + stdout.read().decode('utf-8'))
+    #print("Error: " + stderr.read().decode('utf-8'))
     client.close()
     return stdin, stdout, stderr
